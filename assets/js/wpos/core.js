@@ -418,10 +418,10 @@ function WPOS() {
                     }
                     // start websocket connection
                     startSocket();
-                    setStatusBar(1, "WPOS is Online");
+                    setStatusBar(1, "POS is Online");
                     initDataSuccess(loginloader);
                     // check for offline sales on login
-                    setTimeout('if (WPOS.sales.getOfflineSalesNum()){ if (WPOS.sales.uploadOfflineRecords()){ WPOS.setStatusBar(1, "WPOS is online"); } }', 2000);
+                    setTimeout('if (WPOS.sales.getOfflineSalesNum()){ if (WPOS.sales.uploadOfflineRecords()){ WPOS.setStatusBar(1, "POS is online"); } }', 2000);
                 });
                 break;
         }
@@ -536,7 +536,7 @@ function WPOS() {
         if (canDoOffline()==true) {
             // set js indicator: important
             online = false;
-            setStatusBar(3, "WPOS is Offline");
+            setStatusBar(3, "POS is Offline");
             // start online check routine
             checktimer = setInterval(doOnlineCheck, 60000);
             return true;
@@ -565,7 +565,7 @@ function WPOS() {
             // load fresh data
             initData(false);
             // initData();
-            setStatusBar(1, "WPOS is Online");
+            setStatusBar(1, "POS is Online");
         }
     }
 
@@ -1095,14 +1095,18 @@ function WPOS() {
         stockindex = {};
         categoryindex = {};
         for (var key in itemtable) {
-            stockindex[itemtable[key].code] = key;
+            if (itemtable[key].active =='Y') //hjkim
+            {
 
+            stockindex[itemtable[key].code] = key;
+  
             var categoryid = itemtable[key].hasOwnProperty('categoryid')?itemtable[key].categoryid:0;
             if (categoryindex.hasOwnProperty(categoryid)){
                 categoryindex[categoryid].push(key);
             } else {
                 categoryindex[categoryid] = [key];
             }
+            }  
         }
     }
 

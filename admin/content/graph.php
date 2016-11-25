@@ -214,7 +214,7 @@
             xaxis: {
                 mode: "time",
                 minTickSize: [1, "day"],
-                timeformat: "%d/%m",
+                timeformat: "%m/%d",
                 timezone: "browser"
             },
             yaxis: {
@@ -287,7 +287,7 @@
         stime.setHours(0); stime.setMinutes(0); stime.setSeconds(0);
         stime = (stime.getTime() - 604800000); // a week ago
 
-        $("#graphstime").datepicker({dateFormat:"dd/mm/yy", maxDate: new Date(etime),
+        $("#graphstime").datepicker({dateFormat:"mm/dd/yy", maxDate: new Date(etime),
             onSelect: function(text, inst){
                 var date = $("#graphstime").datepicker("getDate");
                 date.setHours(0); date.setMinutes(0); date.setSeconds(0);
@@ -295,7 +295,7 @@
                 setGraphRange();
             }
         });
-        $("#graphetime").datepicker({dateFormat:"dd/mm/yy", maxDate: new Date(etime),
+        $("#graphetime").datepicker({dateFormat:"mm/dd/yy", maxDate: new Date(etime),
             onSelect: function(text, inst){
                 var date = $("#graphetime").datepicker("getDate");
                 date.setHours(23); date.setMinutes(59); date.setSeconds(59);

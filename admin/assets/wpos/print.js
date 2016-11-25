@@ -27,6 +27,7 @@ function WPOSPrint(kitchenMode) {
     var webprint;
     var curset;
     var curprinter = null;
+    var transactions = {};
 
     this.loadPrintSettings = function () {
         loadPrintSettings(true);
@@ -92,9 +93,38 @@ function WPOSPrint(kitchenMode) {
         return false;
     }
 
+    this.getLocalConfig = function(){
+        return getLocalConfig();
+    };
+
+    function getLocalConfig(){
+        var lconfig = localStorage.getItem("wpos_lconfig");
+        if (lconfig==null || lconfig==undefined){
+            // put default config here.
+            var defcon = {
+                keypad: true,
+                eftpos:{
+                    enabled: false,
+                    receipts:true,
+                    provider: 'tyro',
+                    merchrec:'ask',
+                    custrec:'ask'
+                }
+            };
+            updateLocalConfig(defcon);
+            return defcon;
+        }
+        return JSON.parse(lconfig);
+    }
+
+    function updateLocalConfig(configobj){
+        localStorage.setItem("wpos_lconfig", JSON.stringify(configobj));
+    }
+
     function loadDefaultSettings(){
         // load variables from local config; a
-        curset = WPOS.getLocalConfig().printing;
+        curset = getLocalConfig().printing;
+
         if (!curset){
             curset = defaultsettings.global;
         }
@@ -448,8 +478,49 @@ function WPOSPrint(kitchenMode) {
         printReceipt(ref);
     };
 
+    function loadTransaction(ref){
+        var trans = WPOS.sendJsonData("transactions/get", JSON.stringify({ref: ref}));
+        if (!trans.hasOwnProperty(ref)){
+            alert("Could not load the selected transaction.");
+            return false;
+        }
+        transactions[ref] = trans[ref];
+        return true;
+    }
+
+    var custtable;
+    var custindex = [];
+    function getCustTable() {
+        if (custtable == null) {
+            loadCustTable();
+        }
+        return custtable;
+    };
+
+    // loads from local storage
+    function loadCustTable() {
+        var data = localStorage.getItem("wpos_customers");
+        if (data != null) {
+            custtable = JSON.parse(data);
+            generateCustomerIndex();
+            return true;
+        }
+        return false;
+    }
+
+    function generateCustomerIndex(){
+        custindex = [];
+        for (var i in custtable){
+            custindex[custtable[i].id] = i;
+        }
+    }
+
     function printReceipt(ref) {
-        var record = WPOS.trans.getTransactionRecord(ref);
+        //var record = WPOS.trans.getTransactionRecord(ref);
+        //var method = getPrintSetting('receipts', 'method');
+        loadTransaction(ref);     
+        var record = transactions[ref];
+
         var method = getPrintSetting('receipts', 'method');
         switch (method) {
             case "br":
@@ -823,9 +894,30 @@ function WPOSPrint(kitchenMode) {
         var cmd = getEscReceiptHeader();
         // transdetails
         cmd += (ltr ? esc_a_l : esc_a_r);
-        cmd += getEscTableRow(formatLabel(translateLabel("Transaction Ref"), true, 1), record.ref, false, false, false);
-        cmd += getEscTableRow(formatLabel(translateLabel("Sale Time"), true, 7), WPOS.util.getDateFromTimestamp(record.processdt), false, false, false) + "\n";
+        
+        if(record.channel=="manual") //invoice 
+        {
+          cmd += getEscTableRow(formatLabel(translateLabel("Invoice"), true, 1), record.ref, false, false, false);
+          cmd += getEscTableRow(formatLabel(translateLabel("Invoice Date"), true, 7), WPOS.util.getDateFromTimestamp(record.processdt), false, false, false) ;
+          cmd += getEscTableRow(formatLabel(translateLabel("Due Date"), true, 7), WPOS.util.getDateFromTimestamp(record.duedt), false, false, false) ;        
+
+        if (record.custid>0) {        
+            var customer = getCustTable()[record.custid];
+            if (customer) {         
+                cmd += getEscTableRow(formatLabel(translateLabel("Customer Name"), true, 1), customer.name, false, false, false)+ "\n";
+            }
+        
+        }          
+        }  
+        else
+        {
+          cmd += getEscTableRow(formatLabel(translateLabel("Transaction Ref"), true, 1), record.ref, false, false, false);
+          cmd += getEscTableRow(formatLabel(translateLabel("Sale Time"), true, 7), WPOS.util.getDateFromTimestamp(record.processdt), false, false, false) + "\n";
+        }  
         // items
+
+        
+        
         var item;
         for (var i in record.items) {
             item = record.items[i];
@@ -892,7 +984,14 @@ function WPOSPrint(kitchenMode) {
             }
 */            
         }
+
+        if(record.channel=="manual") //invoice 
+        {
+            cmd += getEscTableRow(formatLabel(translateLabel('Amount Paid'), true, 1), WPOS.util.currencyFormat(record.total-record.balance, false, true), true, false, true);        
+            cmd += getEscTableRow(formatLabel(translateLabel('Amount Balance'), true, 1), WPOS.util.currencyFormat(record.balance, false, true), true, false, true);       
+        }
         cmd += '\n';
+
         // refunds
         if (record.hasOwnProperty("refunddata")) {
             cmd += esc_a_c + esc_bold_on + translateLabel('Refund') + font_reset + '\n';
@@ -920,6 +1019,7 @@ function WPOSPrint(kitchenMode) {
         // add integrated eftpos receipts
         if (paymentreceipts != '' && WPOS.getLocalConfig().eftpos.receipts) cmd += esc_a_c + paymentreceipts;
         // footer
+
         cmd += esc_bold_on + esc_a_c + WPOS.getConfigTable().pos.recfooter + font_reset + "\r";
 
         return cmd;
@@ -1022,7 +1122,7 @@ function WPOSPrint(kitchenMode) {
     }
 
     this.testBitmapReceipt = function(ref){
-        var record = WPOS.trans.getTransactionRecord(ref!=null?ref:"1449222132735-1-5125");
+        var record = WPOS.transactions.getTransactionRecord(ref!=null?ref:"1449222132735-1-5125");
         var html = getHtmlReceipt(record, true);
         getESCPHtmlString(html, function(data){
             sendESCPPrintData('receipts', data + getFeedAndCutCommands(printer));
@@ -1406,7 +1506,8 @@ function WPOSPrint(kitchenMode) {
         }
         // customer
         if (record.custid>0) {
-            var customer = WPOS.getCustTable()[record.custid];
+//            var customer = WPOS.getCustTable()[record.custid];
+            var customer = getCustTable()[record.custid];
             if (customer) {
                 temp_data.customer_name = customer.name;
                 temp_data.customer_address = customer.address;
@@ -1469,8 +1570,8 @@ function WPOSPrint(kitchenMode) {
                     temp_data.eftpos_receipts = record.refunddata[lastrefindex].paydata.customerReceipt;
                 }
             }
-            if (!WPOS.getLocalConfig().eftpos.receipts)
-                temp_data.eftpos_receipts = '';
+            //if (!WPOS.getLocalConfig().eftpos.receipts)
+            //   temp_data.eftpos_receipts = '';
         }
 
         return Mustache.render(template.template, temp_data);

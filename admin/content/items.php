@@ -28,14 +28,22 @@
         </label>
     </th>
     <th>ID</th>
-    <th>Name</th>
+    <th>Image</th>       
+    <th>Category</th>                
+    <th>Code</th>     
+<!--<th>Name</th> -->
     <th>Description</th>
-    <th>Tax</th>
-    <th>Default Qty</th>
+    <th>SubLine</th>        
+<!--<th>Tax</th> -->
+    <th>Unit</th>
     <th>Price</th>
-    <th>Stockcode</th>
-    <th>Category</th>
-    <th>Supplier</th>
+    <th>%</th>    
+    <th>Price2</th>    
+    <th>%</th>    
+    <th>Cost</th>
+    <th>Stock</th>         
+    <th>Status</th>    
+<!--<th>Supplier</th> -->
     <th class="noexport"></th>
 </tr>
 </thead>
@@ -67,6 +75,25 @@
             <div class="tab-pane active in" id="itemdetails">
                 <table>
                     <tr>
+                        <td style="text-align: right;"><label>Code:&nbsp;</label></td>
+                        <td><input id="itemcode" type="text"/>
+                         <input id="itemid" type="hidden"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align: right;"><label>Category:&nbsp;</label></td>
+                        <td><select id="itemcategory" class="catselect">
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right;"><label>Active:&nbsp;</label></td>
+                        <td><select id="itemactive" class="activeselect">
+                            </select></td>
+                    </tr>
+
+<!--                  
+                    <tr>
                         <td style="text-align: right;"><label>Name:&nbsp;</label></td>
                         <td><input id="itemname" type="text"/>
                             <input id="itemid" type="hidden"/></td>
@@ -77,36 +104,72 @@
                             <small>Alternate language name</small>
                         </td>
                     </tr>
+-->                    
                     <tr>
                         <td style="text-align: right;"><label>Description:&nbsp;</label></td>
                         <td><input id="itemdesc" type="text"/></td>
                     </tr>
                     <tr>
-                        <td style="text-align: right;"><label>Unit Price:&nbsp;</label></td>
+                        <td style="text-align: right;"><label>Subline:&nbsp;</label></td>
+                        <td><select id="itemsubline" class="sublineselect">
+                            </select></td>
+                    </tr>                    
+                    <tr>
+                        <td style="text-align: right;"><label>Unit:&nbsp;</label></td>
+                        <td><select id="itemunit" class="unitselect">
+                            </select></td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="text-align: right;"><label>Price:&nbsp;</label></td>
                         <td><input id="itemprice" type="text" value="0"/></td>
                     </tr>
+                    <tr>
+                        <td style="text-align: right;"><label>Price2:&nbsp;</label></td>
+                        <td><input id="itemprice2" type="text" value="0"/></td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align: right;"><label>Price3:&nbsp;</label></td>
+                        <td><input id="itemprice3" type="text" value="0"/></td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align: right;"><label>Price4:&nbsp;</label></td>
+                        <td><input id="itemprice4" type="text" value="0"/></td>
+                    </tr>
+
+
+                    <tr>
+                        <td style="text-align: right;"><label>Cost:&nbsp;</label></td>
+                        <td><input id="itemcost" type="text" value="0"/></td>
+                    </tr>
+<!--
                     <tr>
                         <td style="text-align: right;"><label>Tax:&nbsp;</label></td>
                         <td><select id="itemtax" class="taxselect">
                             </select></td>
                     </tr>
+-->                    
                     <tr>
-                        <td style="text-align: right;"><label>Default Qty:&nbsp;</label></td>
+                        <td style="text-align: right;"><label>Stock:&nbsp;</label></td>
                         <td><input id="itemqty" type="text" value="1"/></td>
                     </tr>
-                    <tr>
-                        <td style="text-align: right;"><label>Stockcode:&nbsp;</label></td>
-                        <td><input id="itemcode" type="text"/></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right;"><label>Category:&nbsp;</label></td>
-                        <td><select id="itemcategory" class="catselect">
-                            </select></td>
-                    </tr>
-                    <tr>
+<!--                <tr>
                         <td style="text-align: right;"><label>Supplier:&nbsp;</label></td>
                         <td><select id="itemsupplier" class="supselect">
                             </select></td>
+                    </tr>
+-->
+                    <tr>
+                        <td style="text-align: right;"><label>Image:&nbsp;</label></td>
+                        <td>
+                            <div class="col-sm-5">
+                            <input type="text" id="itemurlimage" /><br/>
+                            <img id="itemurlimageprev" width="128" height="64" src="" />
+                            <input type="file" id="itemurlimagefile" name="file" />
+                            </div>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -158,6 +221,23 @@
 <div id="adddialog" class="hide">
     <table>
         <tr>
+            <td style="text-align: right;"><label>Code:&nbsp;</label></td>
+            <td><input id="newitemcode" type="text"/></td>
+        </tr>
+        <tr>
+            <td style="text-align: right;"><label>Category:&nbsp;</label></td>
+            <td><select id="newitemcategory" class="catselect">
+                </select></td>
+        </tr>
+        
+        <tr>
+            <td style="text-align: right;"><label>Active:&nbsp;</label></td>
+            <td><select id="newitemactive" class="activeselect">
+                </select></td>
+        </tr>
+        
+<!--        
+        <tr>
            <td style="text-align: right;"><label>Name:&nbsp;</label></td>
            <td><input id="newitemname" type="text"/><br/></td>
         </tr>
@@ -167,38 +247,94 @@
                 <small>Alternate language name</small>
             </td>
         </tr>
+-->        
         <tr>
             <td style="text-align: right;"><label>Description:&nbsp;</label></td>
             <td><input id="newitemdesc" type="text"/></td>
         </tr>
+        
         <tr>
-            <td style="text-align: right;"><label>Unit Price:&nbsp;</label></td>
+            <td style="text-align: right;"><label>Subline:&nbsp;</label></td>
+                        <td><select id="newitemsubline" class="sublineselect">
+                            </select></td>
+        </tr>
+        
+        <tr>
+            <td style="text-align: right;"><label>Unit:&nbsp;</label></td>
+                        <td><select id="newitemunit" class="unitselect">
+                            </select></td>
+        </tr>
+
+
+        <tr>
+            <td style="text-align: right;"><label>Price:&nbsp;</label></td>
             <td><input id="newitemprice" type="text" value="0"/></td>
         </tr>
         <tr>
+            <td style="text-align: right;"><label>Price2:&nbsp;</label></td>
+            <td><input id="newitemprice2" type="text" value="0"/></td>
+        </tr>
+        <tr>
+            <td style="text-align: right;"><label>Price3:&nbsp;</label></td>
+            <td><input id="newitemprice3" type="text" value="0"/></td>
+        </tr>
+        <tr>
+            <td style="text-align: right;"><label>Price4:&nbsp;</label></td>
+            <td><input id="newitemprice4" type="text" value="0"/></td>
+        </tr>
+        <tr>
+            <td style="text-align: right;"><label>Cost:&nbsp;</label></td>
+            <td><input id="newitemcost" type="text" value="0"/></td>
+        </tr>
+<!--
+        <tr>
             <td style="text-align: right;"><label>Tax:&nbsp;</label></td>
             <td><select id="newitemtax" class="taxselect">
-            </select></td>
-        </tr>
-        <tr>
-            <td style="text-align: right;"><label>Default Qty:&nbsp;</label></td>
-            <td><input id="newitemqty" type="text" value="1"/></td>
-        </tr>
-        <tr>
-            <td style="text-align: right;"><label>Stockcode:&nbsp;</label></td>
-            <td><input id="newitemcode" type="text"/></td>
-        </tr>
-        <tr>
-            <td style="text-align: right;"><label>Category:&nbsp;</label></td>
-            <td><select id="newitemcategory" class="catselect">
                 </select></td>
         </tr>
+-->        
+        <tr>
+            <td style="text-align: right;"><label>Stock:&nbsp;</label></td>
+            <td><input id="newitemqty" type="text" value="1"/></td>
+        </tr>
+<!--        
         <tr>
             <td style="text-align: right;"><label>Supplier:&nbsp;</label></td>
             <td><select id="newitemsupplier" class="supselect">
             </select></td>
         </tr>
+-->       
+        <tr>
+            <td style="text-align: right;"><label>Image:&nbsp;</label></td>
+            <td>
+                <div class="col-sm-5">
+                <input type="text" id="newitemurlimage" /><br/>
+                <img id="newitemurlimageprev" width="128" height="64" src="" />
+                <input type="file" id="newitemurlimagefile" name="file" />
+                </div>
+            </td>
+        </tr>        
     </table>
+</div>
+ 
+<div id="stockhistdialog" class="hide">
+
+    <div style="width: 100%; overflow-x: auto;height:700px;">
+    <table class="table table-responsive table-stripped">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>DT</th>
+            </tr>
+        </thead>
+        <tbody id="stockhisttable">
+
+        </tbody>
+    </table>
+    </div>
 </div>
 
 <!-- page specific plugin scripts; migrated to index.php due to heavy use -->
@@ -206,24 +342,336 @@
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
     var stock = null;
+    var items = null;
+    var datatable;
+    $(function() {
+        stock = WPOS.getJsonData("stock/get");
+        var stockarray = [];
+        var tempstock;
+        for (var key in stock){
+            tempstock = stock[key];
+            stockarray.push(tempstock);
+        }
+        datatable = $('#stocktable').dataTable(
+            { "bProcessing": true,
+            "aaData": stockarray,
+            "aaSorting": [[ 2, "asc" ]],
+            "aoColumns": [
+                { mData:null, sDefaultContent:'<div style="text-align: center"><label><input class="ace" type="checkbox"><span class="lbl"></span></label><div>', bSortable: false, sClass:"hidden-480 hidden-320 hidden-xs noexport" },
+                { mData:function(data,type,val){return (data.name==null?"Unknown":data.name) } },
+                //{ mData:"supplier" },
+                { mData:function(data,type,val){return (data.locationid!=='0'?(WPOS.locations.hasOwnProperty(data.locationid)?WPOS.locations[data.locationid].name:'Unknown'):'Warehouse');} },
+                { mData:"stocklevel" },
+                { mData:function(data,type,val){return '<div class="action-buttons"><a class="green" onclick="openEditStockDialog('+data.id+');"><i class="icon-pencil bigger-130"></i></a><a class="blue" onclick="openTransferStockDialog('+data.id+')"><i class="icon-arrow-right bigger-130"></i></a><a class="red" onclick="getStockHistory('+data.storeditemid+', '+data.locationid+');"><i class="icon-time bigger-130"></i></a></div>'; }, "bSortable": false, sClass: "noexport" }
+            ] } );
+        // insert table wrapper
+        $(".dataTables_wrapper table").wrap("<div class='table_wrapper'></div>");
+
+        $('table th input:checkbox').on('click' , function(){
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function(){
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+        });
+
+        // dialogs
+        $( "#addstockdialog" ).removeClass('hide').dialog({
+                resizable: false,
+                width: 'auto',
+                modal: true,
+                autoOpen: false,
+                title: "Add Stock",
+                title_html: true,
+                buttons: [
+                    {
+                        html: "<i class='icon-save bigger-110'></i>&nbsp; Save",
+                        "class" : "btn btn-success btn-xs",
+                        click: function() {
+                            saveItem(1);
+                        }
+                    }
+                    ,
+                    {
+                        html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                        "class" : "btn btn-xs",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ],
+            create: function( event, ui ) {
+                // Set maxWidth
+                $(this).css("maxWidth", "375px");
+            }
+        });
+        $( "#editstockdialog" ).removeClass('hide').dialog({
+            resizable: false,
+            width: 'auto',
+            modal: true,
+            autoOpen: false,
+            title: "Edit Stock",
+            title_html: true,
+            buttons: [
+                {
+                    html: "<i class='icon-save bigger-110'></i>&nbsp; Update",
+                    "class" : "btn btn-success btn-xs",
+                    click: function() {
+                        saveItem(2);
+                    }
+                }
+                ,
+                {
+                    html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                    "class" : "btn btn-xs",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            ],
+            create: function( event, ui ) {
+                // Set maxWidth
+                $(this).css("maxWidth", "375px");
+            }
+        });
+        $( "#transferstockdialog" ).removeClass('hide').dialog({
+            resizable: false,
+            width: 'auto',
+            modal: true,
+            autoOpen: false,
+            title: "Transfer Stock",
+            title_html: true,
+            buttons: [
+                {
+                    html: "<i class='icon-save bigger-110'></i>&nbsp; Update",
+                    "class" : "btn btn-success btn-xs",
+                    click: function() {
+                        saveItem(3);
+                    }
+                }
+                ,
+                {
+                    html: "<i class='icon-remove bigger-110'></i>&nbsp; Cancel",
+                    "class" : "btn btn-xs",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            ],
+            create: function( event, ui ) {
+                // Set maxWidth
+                $(this).css("maxWidth", "375px");
+            }
+        });
+        $( "#stockhistdialog" ).removeClass('hide').dialog({
+            resizable: false,
+            width: 'auto',
+            maxWidth: '700px',
+            modal: true,
+            autoOpen: false,
+            title: "Stock History",
+            title_html: true,
+            buttons: [
+                {
+                    html: "<i class='icon-remove bigger-110'></i>&nbsp; Close",
+                    "class" : "btn btn-xs",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            ],
+            create: function( event, ui ) {
+                // Set maxWidth
+                $(this).css("maxWidth", "700px");
+            }
+        });
+        // fill location selects
+        var locselect = $(".locselect");
+        locselect.html('');
+        for (key in WPOS.locations){
+            if (key == 0){
+                locselect.append('<option class="locid-0" value="0">Warehouse</option>');
+            } else {
+                locselect.append('<option class="locid-'+WPOS.locations[key].id+'" value="'+WPOS.locations[key].id+'">'+WPOS.locations[key].name+'</option>');
+            }
+        }
+
+        // hide loader
+        WPOS.util.hideLoader();
+    });
+    // updating records
+    function getStockHistory(id, locationid){
+        WPOS.util.showLoader();
+        var stockhist = WPOS.sendJsonData("stock/history", JSON.stringify({storeditemid: id, locationid: locationid}));
+        // populate stock dialog with list
+        $("#stockhisttable").html("");
+        var hist;
+        for (var i in stockhist){
+            hist = stockhist[i];
+            $("#stockhisttable").append('<tr><td>'+hist.name+'</td><td>'+hist.location+'</td><td>'+hist.type+(hist.auxid!=-1?(hist.auxdir==1?" from ":" to ")+(hist.auxid==0?"Warehouse":WPOS.locations[hist.auxid].name):"")+'</td><td>'+hist.amount+'</td><td>'+hist.dt+'</td></tr>');
+        }
+        WPOS.util.hideLoader();
+        $("#stockhistdialog").dialog('open');
+    }
+    function openEditStockDialog(id){
+        var item = stock[id];
+        $("#setstockitemid").val(item.storeditemid);
+        $("#setstocklocid").val(item.locationid);
+        $("#setstockqty").val(item.stocklevel);
+        $("#editstockdialog").dialog("open");
+    }
+    function openAddStockDialog(){
+        populateItems();
+        $("#addstockdialog").dialog("open");
+    }
+    function openTransferStockDialog(id){
+        var item = stock[id];
+        $("#tstockitemid").val(item.storeditemid);
+        $("#tstocklocid").val(item.locationid);
+        $("#transferstockdialog").dialog("open");
+    }
+    function populateItems(){
+        if (items == null){
+            WPOS.util.showLoader();
+            items = WPOS.sendJsonData("items/get");
+            var itemselect = $(".itemselect");
+            itemselect.html('');
+            for (var i in items){
+                itemselect.append('<option class="itemid-'+items[i].id+'" value="'+items[i].id+'">'+items[i].name+'</option>');
+            }
+            WPOS.util.hideLoader();
+        }
+    }
+    function saveItem(type){
+        // show loader
+        WPOS.util.showLoader();
+        var item = {};
+        switch (type){
+        case 1:
+            // adding new stock
+            item.storeditemid = $("#addstockitemid option:selected").val();
+            item.locationid = $("#addstocklocid option:selected").val();
+            item.amount = $("#addstockqty").val();
+            if (WPOS.sendJsonData("stock/add", JSON.stringify(item))!==false){
+                reloadTable();
+                $("#addstockdialog").dialog("close");
+            }
+            break;
+        case 2:
+            // set stock level
+            item.storeditemid = $("#setstockitemid").val();
+            item.locationid = $("#setstocklocid").val();
+            item.amount = $("#setstockqty").val();
+            if (WPOS.sendJsonData("stock/set", JSON.stringify(item))!==false){
+                reloadTable();
+                $("#editstockdialog").dialog("close");
+            }
+            break;
+        case 3:
+            // transfer stock
+            item.storeditemid = $("#tstockitemid").val();
+            item.locationid = $("#tstocklocid").val();
+            item.newlocationid = $("#tstocknewlocid").val();
+            item.amount = $("#tstockqty").val();
+            if (WPOS.sendJsonData("stock/transfer", JSON.stringify(item))!==false){
+               reloadTable();
+               $("#transferstockdialog").dialog("close");
+            }
+            break;
+        }
+        // hide loader
+        WPOS.util.hideLoader();
+    }
+    function reloadTable(){
+        stock = WPOS.getJsonData("stock/get");
+        var stockarray = [];
+        var tempstock;
+        for (var key in stock){
+            tempstock = stock[key];
+            stockarray.push(tempstock);
+        }
+        datatable.fnClearTable();
+        datatable.fnAddData(stockarray);
+    }
+    function exportStock(){
+        var data  = WPOS.table2CSV($("#stocktable"));
+        var filename = "stock-"+WPOS.util.getDateFromTimestamp(new Date());
+        filename = filename.replace(" ", "");
+        WPOS.initSave(filename, data);
+    }
+</script>
+
+<!-- page specific plugin scripts; migrated to index.php due to heavy use -->
+
+<!-- inline scripts related to this page -->
+<link rel="stylesheet" href="dist/jquery.ezdz.min.css">
+<script src="dist/jquery.ezdz.min.js"></script>
+<script type="text/javascript">
+    var stock = null;
     var suppliers = null;
     var categories = null;
     var datatable;
+    
+     $('#itemurlimagefile').on('change',uploadUrlImage);
+     $('#itemurlimage').on('change',function(e){
+     $("#itemurlimageprev").prop("src", $(e.target).val());
+     });
+
+     $('#newitemurlimagefile').on('change',uploadNewUrlImage);
+     $('#newitemurlimage').on('change',function(e){
+     $("#newitemurlimageprev").prop("src", $(e.target).val());
+     });
+
+
+    function uploadUrlImage(event){
+        WPOS.uploadFile(event, function(data){
+            $("#itemurlimage").val(data.path);
+            $("#itemurlimageprev").prop("src", data.path);
+            //saveSettings();
+        }); // Start file upload, passing a callback to fire if it completes successfully
+    }
+
+
+    function uploadNewUrlImage(event){
+        WPOS.uploadFile(event, function(data){
+            $("#newitemurlimage").val(data.path);
+            $("#newitemurlimageprev").prop("src", data.path);
+            //saveSettings();
+        }); // Start file upload, passing a callback to fire if it completes successfully
+    }
+
+        
+
     $(function() {
-        var data = WPOS.sendJsonData("multi", JSON.stringify({"items/get":"", "suppliers/get":"", "categories/get":""}));
+//      var data = WPOS.sendJsonData("multi", JSON.stringify({"items/get":"", "suppliers/get":"", "categories/get":"" , "stock/get":""  }));
+        var data = WPOS.sendJsonData("multi", JSON.stringify({"items/get":"", "categories/get":"" , "stock/get":""  }));
         stock = data['items/get'];
-        suppliers = data['suppliers/get'];
+        stock2 = data['stock/get'];
+//      suppliers = data['suppliers/get'];
         categories = data['categories/get'];
         var itemarray = [];
         var tempitem;
-        var taxrules = WPOS.getTaxTable().rules;
+//      var taxrules = WPOS.getTaxTable().rules;
         for (var key in stock){
             tempitem = stock[key];
+            //console.log(key);
+//            var stock2 = WPOS.sendJsonData("stock/level", JSON.stringify({storeditemid: key, locationid: 0 }));
+//            tempitem.qty=stock2[0].stocklevel;
+            //hjkim
+            for (var key2 in stock2){
+              if (key==stock2[key2].storeditemid)
+              {  
+                tempitem.qty=stock2[key2].stocklevel;
+              }            
+            }  
+/*
             if (taxrules.hasOwnProperty(tempitem.taxid)){
                 tempitem.taxname = taxrules[tempitem.taxid].name;
             } else {
                 tempitem.taxname = "Not Defined";
             }
+*/            
             itemarray.push(tempitem);
         }
         datatable = $('#itemstable').dataTable(
@@ -233,15 +681,24 @@
             "aoColumns": [
                 { mData:null, sDefaultContent:'<div style="text-align: center"><label><input class="ace" type="checkbox"><span class="lbl"></span></label><div>', bSortable: false, sClass:"hidden-480 hidden-320 hidden-xs noexport" },
                 { "sType": "numeric", "mData":"id" },
-                { "sType": "string", "mData":"name" },
+                { "sType": "html", mData:function(data,type,val){ return "<img width=80 height=60 src="+data.urlimage+">" }},                
+                { "sType": "string", "mData":function(data,type,val){return (categories.hasOwnProperty(data.categoryid)?categories[data.categoryid].name:'Misc'); } },                                
+                { "sType": "string", "mData":"code" },                
+//              { "sType": "string", "mData":"name" },
                 { "sType": "string", "mData":"description" },
-                { "sType": "string", "mData":"taxname" },
-                { "sType": "numeric", "mData":"qty" },
+//              { "sType": "string", "mData":"taxname" },
+                { "sType": "string", "mData":"subline" },
+                { "sType": "string", "mData":"unit" },
                 { "sType": "currency", "mData":function(data,type,val){return (data['price']==""?"":WPOS.util.currencyFormat(data["price"]));} },
-                { "sType": "string", "mData":"code" },
-                { "sType": "string", "mData":function(data,type,val){return (categories.hasOwnProperty(data.categoryid)?categories[data.categoryid].name:'Misc'); } },
-                { "sType": "string", "mData":function(data,type,val){return (suppliers.hasOwnProperty(data.supplierid)?suppliers[data.supplierid].name:'Misc'); } },
-                { "sType": "html", mData:null, sDefaultContent:'<div class="action-buttons"><a class="green" onclick="openEditDialog($(this).closest(\'tr\').find(\'td\').eq(1).text());"><i class="icon-pencil bigger-130"></i></a><a class="red" onclick="removeItem($(this).closest(\'tr\').find(\'td\').eq(1).text())"><i class="icon-trash bigger-130"></i></a></div>', "bSortable": false, sClass: "noexport" }
+                { "sType": "currency", "mData":function(data,type,val){return ( WPOS.util.decimal2Places(((data["price"] - data["cost"]) / data["price"] )*100));} },
+                { "sType": "currency", "mData":function(data,type,val){return (data['price2']==""?"":WPOS.util.currencyFormat(data["price2"]));} }, 
+//                { "sType": "currency", "mData":function(data,type,val){return ( ((data["price2"] - data["cost"]) / data["price2"] )*100);} },
+                { "sType": "currency", "mData":function(data,type,val){return ( WPOS.util.decimal2Places(((data["price2"] - data["cost"]) / data["price2"] )*100));} },
+                { "sType": "currency", "mData":function(data,type,val){return (data['cost']==""?"":WPOS.util.currencyFormat(data["cost"]));} },                              
+                { "sType": "numeric", "mData":"qty" },                
+                { "sType": "string", "mData":"active" },
+//              { "sType": "string", "mData":function(data,type,val){return (suppliers.hasOwnProperty(data.supplierid)?suppliers[data.supplierid].name:'Misc'); } },
+                { "sType": "html", mData:null, sDefaultContent:'<div class="action-buttons"><a class="green" onclick="openEditDialog($(this).closest(\'tr\').find(\'td\').eq(1).text());"><i class="icon-pencil bigger-130"></i></a><a class="red" onclick="removeItem($(this).closest(\'tr\').find(\'td\').eq(1).text())"><i class="icon-trash bigger-130"></i></a> <a class="red" onclick="getStockHistory($(this).closest(\'tr\').find(\'td\').eq(1).text(), 0);"><i class="icon-time bigger-130"></i></a> </div>', "bSortable": false, sClass: "noexport" }
             ] } );
         // insert table wrapper
         $(".dataTables_wrapper table").wrap("<div class='table_wrapper'></div>");
@@ -331,18 +788,43 @@
             }
         });
         // populate tax records in select boxes
-        var taxsel = $(".taxselect");
+/*      var taxsel = $(".taxselect");
         taxsel.html('');
         for (key in WPOS.getTaxTable().rules){
             taxsel.append('<option class="taxid-'+WPOS.getTaxTable().rules[key].id+'" value="'+WPOS.getTaxTable().rules[key].id+'">'+WPOS.getTaxTable().rules[key].name+'</option>');
         }
+*/        
         // populate category & supplier records in select boxes
+/*
         var supsel = $(".supselect");
         supsel.html('');
         supsel.append('<option class="supid-0" value="0">None</option>');
         for (key in suppliers){
             supsel.append('<option class="supid-'+suppliers[key].id+'" value="'+suppliers[key].id+'">'+suppliers[key].name+'</option>');
         }
+*/
+        var unisel = $(".unitselect");
+        unisel.html('');
+//        unisel.append('<option class="unitsid-0" value="NONE">NONE</option>');
+        unisel.append('<option class="unitsid-1" value="DOZEN">DOZEN</option>');
+        unisel.append('<option class="unitsid-2" value="YARD">YARD</option>');                
+        unisel.append('<option class="unitsid-3" value="PIECE">PIECE</option>');        
+        unisel.append('<option class="unitsid-4" value="METER">METER</option>');        
+
+
+        var sublinesel = $(".sublineselect");
+        sublinesel.html('');
+//        unisel.append('<option class="unitsid-0" value="NONE">NONE</option>');
+        sublinesel.append('<option class="sublinesid-1" value="COLLAR">COLLAR</option>');
+        sublinesel.append('<option class="sublinesid-2" value="MATERIAL">MATERIAL</option>'); 
+        sublinesel.append('<option class="sublinesid-3" value="CINTURON">CINTURON</option>'); 
+        sublinesel.append('<option class="sublinesid-4" value="GIPIUR/ENCAJE">GIPIUR/ENCAJE</option>');                
+        sublinesel.append('<option class="sublinesid-5" value="MESH">MESH</option>');                      
+        sublinesel.append('<option class="sublinesid-7" value="PLANILLA">PLANILLA</option>');        
+        sublinesel.append('<option class="sublinesid-8" value="CADENA">CADENA</option>');        
+        sublinesel.append('<option class="sublinesid-9" value="COLLAR ECONOMICO">COLLAR ECONOMICO</option>');
+
+
 
         var catsel = $(".catselect");
         catsel.html('');
@@ -351,6 +833,11 @@
             catsel.append('<option class="catid-'+categories[key].id+'" value="'+categories[key].id+'">'+categories[key].name+'</option>');
         }
 
+        var actsel = $(".activeselect");
+        actsel.html('');
+        actsel.append('<option class="actid-0" value="Y">Yes</option>');
+        actsel.append('<option class="actid-1" value="N">No</option>');        
+
         // hide loader
         WPOS.util.hideLoader();
     });
@@ -358,16 +845,26 @@
     function openEditDialog(id){
         var item = stock[id];
         $("#itemid").val(item.id);
-        $("#itemname").val(item.name);
-        $("#itemaltname").val(item.alt_name);
+        $("#itemcategory").val(item.categoryid);        
+        $("#itemactive").val(item.active);                
+//      $("#itemname").val(item.name);
+//      $("#itemaltname").val(item.alt_name);
         $("#itemdesc").val(item.description);
+        $("#itemsubline").val(item.subline);             
+        $("#itemunit").val(item.unit);        
         $("#itemqty").val(item.qty);
-        $("#itemtax").val(item.taxid);
+//      $("#itemtax").val(item.taxid);
         $("#itemcode").val(item.code);
         $("#itemprice").val(item.price);
-        $("#itemsupplier").val(item.supplierid);
-        $("#itemcategory").val(item.categoryid);
-        $("#itemtype").val(item.type);
+        $("#itemprice2").val(item.price2);
+        $("#itemprice3").val(item.price3);        
+        $("#itemprice4").val(item.price4);                        
+        $("#itemcost").val(item.cost);        
+//      $("#itemsupplier").val(item.supplierid);
+        $("#itemtype").val(item.type);        
+        $("#itemurlimage").val(item.urlimage);                                
+        $("#itemurlimagefile").val('');
+        $("#itemurlimageprev").prop("src", item.urlimage);
         var modtable = $("#itemmodtable");
         var modselecttable = $("#itemselmodtable");
         modtable.html('');
@@ -416,15 +913,24 @@
         var result;
         if (isnewitem){
             // adding a new item
+            item.urlimage = $("#newitemurlimage").val();            
+            item.categoryid = $("#newitemcategory").val();            
+            item.active = $("#newitemactive").val();                        
             item.code = $("#newitemcode").val();
             item.qty = $("#newitemqty").val();
-            item.name = $("#newitemname").val();
-            item.alt_name = $("#newitemaltname").val();
+//          item.name = $("#newitemname").val();
+            item.name = $("#newitemcode").val();
+//          item.alt_name = $("#newitemaltname").val();
             item.description = $("#newitemdesc").val();
-            item.taxid = $("#newitemtax").val();
+            item.subline = $("#newitemsubline").val();            
+//          item.taxid = $("#newitemtax").val();
+            item.unit = $("#newitemunit").val();
             item.price = $("#newitemprice").val();
-            item.supplierid = $("#newitemsupplier").val();
-            item.categoryid = $("#newitemcategory").val();
+            item.price2 = $("#newitemprice2").val();    
+            item.price3 = $("#newitemprice3").val();            
+            item.price4 = $("#newitemprice4").val();                                                        
+            item.cost = $("#newitemcost").val();                        
+//          item.supplierid = $("#newitemsupplier").val();
             item.type = "general";
             item.modifiers = [];
             result = WPOS.sendJsonData("items/add", JSON.stringify(item));
@@ -436,16 +942,25 @@
         } else {
             // updating an item
             item.id = $("#itemid").val();
+            item.urlimage = $("#itemurlimage").val();             
+            item.categoryid = $("#itemcategory").val();            
+            item.active = $("#itemactive").val();                        
             item.code = $("#itemcode").val();
             item.qty = $("#itemqty").val();
-            item.name = $("#itemname").val();
-            item.alt_name = $("#itemaltname").val();
+//          item.name = $("#itemname").val();
+            item.name = $("#itemcode").val();
+//            item.alt_name = $("#itemaltname").val();
             item.description = $("#itemdesc").val();
-            item.taxid = $("#itemtax").val();
+//          item.taxid = $("#itemtax").val();
+            item.subline = $("#itemsubline").val();
+            item.unit = $("#itemunit").val();
             item.price = $("#itemprice").val();
-            item.supplierid = $("#itemsupplier").val();
-            item.categoryid = $("#itemcategory").val();
-            item.type = $("#itemtype").val();
+            item.price2 = $("#itemprice2").val();
+            item.price3 = $("#itemprice3").val();
+            item.price4 = $("#itemprice4").val();            
+            item.cost = $("#itemcost").val();
+//          item.supplierid = $("#itemsupplier").val();
+            item.type = $("#itemtype").val();                                                       
             item.modifiers = [];
             $("#itemselmodtable .selmoditem").each(function(){
                 var mod = {type:"select", options:[]};
@@ -501,7 +1016,7 @@
         var tempitem;
         for (var key in stock){
             tempitem = stock[key];
-            tempitem.taxname = WPOS.getTaxTable().rules[tempitem.taxid].name;
+//          tempitem.taxname = WPOS.getTaxTable().rules[tempitem.taxid].name;
             itemarray.push(tempitem);
         }
         datatable.fnClearTable();
@@ -513,9 +1028,41 @@
         filename = filename.replace(" ", "");
         WPOS.initSave(filename, data);
     }
+
+ 
+    //hjkim
+    // updating records
+    function getStockHistory(id, locationid){
+      
+        var locationid = 0;
+        WPOS.util.showLoader();
+        var stockhist = WPOS.sendJsonData("stock/history", JSON.stringify({storeditemid: id, locationid: locationid}));
+        var stock2 = WPOS.sendJsonData("stock/level", JSON.stringify({storeditemid: id, locationid: locationid}));
+
+        // populate stock dialog with list
+        $("#stockhisttable").html("");
+        var hist;
+        for (var i in stockhist){
+//            if(i == stock2[i].storeditemid) {
+//               var kkk=stock2[i].stocklevel;  
+//            }
+
+            hist = stockhist[i];
+            $("#stockhisttable").append('<tr><td>'+hist.name+'</td><td>'+hist.location+'</td><td>'+hist.type+(hist.auxid!=-1?(hist.auxdir==1?" from ":" to ")+(hist.auxid==0?"Warehouse":WPOS.locations[hist.auxid].name):"")+'</td><td>'+hist.amount+'</td><td>'+hist.dt+'</td></tr>');
+        }
+            $("#stockhisttable").append('<tr><td></td><td></td><td>Total</td><td>'+stock2[0].stocklevel+'</td><td></td></tr>');        
+        WPOS.util.hideLoader();
+        $("#stockhistdialog").dialog('open');
+    }
+
+
 </script>
 <style type="text/css">
     #itemstable_processing {
         display: none;
     }
-</style>
+</style><script>
+$('[type="file"]').ezdz({
+  text: 'drop a picture'
+});
+</script>

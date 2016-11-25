@@ -131,6 +131,66 @@ returnResult($result);
  * @param $result
  * @return array|mixed
  */
+ 
+function GenerateThumbnail($im_filename,$th_filename,$max_width,$max_height,$quality = 0.75)
+{
+// The original image must exist
+if(is_file($im_filename))
+{
+    // Let's create the directory if needed
+    $th_path = dirname($th_filename);
+    if(!is_dir($th_path))
+        mkdir($th_path, 0777, true);
+    // If the thumb does not aleady exists
+    if(!is_file($th_filename))
+    {
+        // Get Image size info
+        list($width_orig, $height_orig, $image_type) = @getimagesize($im_filename);
+        if(!$width_orig)
+            return 2;
+        switch($image_type)
+        {
+            case 1: $src_im = @imagecreatefromgif($im_filename);    break;
+            case 2: $src_im = @imagecreatefromjpeg($im_filename);   break;
+            case 3: $src_im = @imagecreatefrompng($im_filename);    break;
+        }
+        if(!$src_im)
+            return 3;
+
+
+        $aspect_ratio = (float) $height_orig / $width_orig;
+
+        $thumb_height = $max_height;
+        $thumb_width = round($thumb_height / $aspect_ratio);
+        if($thumb_width > $max_width)
+        {
+            $thumb_width    = $max_width;
+            $thumb_height   = round($thumb_width * $aspect_ratio);
+        }
+
+        $width = $thumb_width;
+        $height = $thumb_height;
+
+        $dst_img = @imagecreatetruecolor($width, $height);
+        if(!$dst_img)
+            return 4;
+        $success = @imagecopyresampled($dst_img,$src_im,0,0,0,0,$width,$height,$width_orig,$height_orig);
+        if(!$success)
+            return 4;
+        switch ($image_type) 
+        {
+            case 1: $success = @imagegif($dst_img,$th_filename); break;
+            case 2: $success = @imagejpeg($dst_img,$th_filename,intval($quality*100));  break;
+            case 3: $success = @imagepng($dst_img,$th_filename,intval($quality*9)); break;
+        }
+        if(!$success)
+            return 4;
+    }
+    return 0;
+}
+return 1;
+} 
+ 
 function routeApiCall($action, $data, $result) {
     global $auth;
     $notinprev = false;
@@ -240,11 +300,22 @@ function routeApiCall($action, $data, $result) {
         case "items/add":
             $adminMdl = new WposAdminItems($data);
             $result = $adminMdl->addStoredItem($result);
+
+            $stockMdl = new WposAdminStock($data);            
+            //hjkim
+            $result2 = $stockMdl->addStock2($result2);
             break;
 
         case "items/edit":
+
             $adminMdl = new WposAdminItems($data);
             $result = $adminMdl->updateStoredItem($result);
+            
+            $stockMdl = new WposAdminStock($data);
+            //hjkim
+//            $result2 = $stockMdl->addStock2($result2);            
+            $result2 = $stockMdl->adjustStockLevel($result);
+
             break;
 
         case "items/delete":
@@ -265,6 +336,7 @@ function routeApiCall($action, $data, $result) {
         case "suppliers/edit":
             $adminMdl = new WposAdminItems($data);
             $result = $adminMdl->updateSupplier($result);
+
             break;
 
         case "suppliers/delete":
@@ -311,6 +383,12 @@ function routeApiCall($action, $data, $result) {
         case "stock/history":
             $stockMdl = new WposAdminStock($data);
             $result = $stockMdl->getStockHistory($result);
+            
+            break;
+        case "stock/level":
+            $stockMdl = new WposAdminStock($data);
+            $result = $stockMdl->getStock($result);
+            
             break;
 
         // customers
@@ -680,6 +758,28 @@ function routeApiCall($action, $data, $result) {
             } else {
                 $result['error'] = "No file selected";
             }
+/*                    
+                Logger::write("file ", "STOCK","111");                                    
+            if (isset($_FILES['file'])) {              
+                Logger::write("newpath 222", "STOCK", $newpath);                            
+                $uploaddir = 'docs';
+                $newpath = $uploaddir . DIRECTORY_SEPARATOR . basename($_FILES['file']['name']);
+                Logger::write("newpath 1", "STOCK", $newpath);              
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $_SERVER['APP_ROOT'] . $newpath."tmp") !== false) {
+                    $result['data'] = ["path" => "/" . $newpath];
+                    Logger::write("newpath 2", "STOCK", $_SERVER['DOCUMENT_ROOT'] . $_SERVER['APP_ROOT'] . $newpath."tmp");                                  
+                    GenerateThumbnail($_SERVER['DOCUMENT_ROOT'] . $_SERVER['APP_ROOT'] . $newpath."tmp",$_SERVER['DOCUMENT_ROOT'] . $_SERVER['APP_ROOT'] . $newpath,100,100,0.80);
+                    // Delete full size
+                    unlink($_SERVER['DOCUMENT_ROOT'] . $_SERVER['APP_ROOT'] . $newpath."tmp");                    
+                    
+                } else {
+                    $result['error'] = "There was an error uploading the file " . $newpath;
+                }
+            } else {
+                $result['error'] = "No file selected";
+            }
+*/                
+            
             break;
 
         // device message

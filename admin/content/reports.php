@@ -170,7 +170,7 @@
 
     function browserPrintHtml(html){
         var printw = window.open('', 'wpos report', 'height=800,width=650');
-        printw.document.write('<html><head><title>Wpos Report</title>');
+        printw.document.write('<html><head><title>Pos Report</title>');
         printw.document.write('<link media="all" href="assets/css/bootstrap.min.css" rel="stylesheet"/><link media="all" rel="stylesheet" href="assets/css/font-awesome.min.css"/><link media="all" rel="stylesheet" href="assets/css/ace-fonts.css"/><link media="all" rel="stylesheet" href="assets/css/ace.min.css"/>');
         printw.document.write('</head><body style="background-color: #FFFFFF;">');
         printw.document.write(html);
@@ -185,7 +185,7 @@
         etime = new Date().getTime();
         stime = (etime - 604800000); // a week ago
 
-        $("#repstime").datepicker({dateFormat:"dd/mm/yy", maxDate: new Date(etime),
+        $("#repstime").datepicker({dateFormat:"mm/dd/yy", maxDate: new Date(etime),
             onSelect: function(text, inst){
                 var date = $("#repstime").datepicker("getDate");
                 date.setHours(0); date.setMinutes(0); date.setSeconds(0);
@@ -193,7 +193,7 @@
                 generateReport();
             }
         });
-        $("#repetime").datepicker({dateFormat:"dd/mm/yy", maxDate: new Date(etime),
+        $("#repetime").datepicker({dateFormat:"mm/dd/yy", maxDate: new Date(etime),
             onSelect: function(text, inst){
                 var date = $("#repetime").datepicker("getDate");
                 date.setHours(23); date.setMinutes(59); date.setSeconds(59);

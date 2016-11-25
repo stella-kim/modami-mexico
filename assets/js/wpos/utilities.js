@@ -46,7 +46,8 @@ function WPOSUtil() {
         if (format == "d/m/y" || format == "m/d/y") {
             datestr = (format == "d/m/y" ? day + "/" + month : month + "/" + day   ) + "/" + year.toString().substring(2, 4) + " " + hour + ":" + min + ":" + sec;
         } else {
-            datestr = date + "/" + month + "/" + day + " " + hour + ":" + min + ":" + sec;
+//            datestr = date + "/" + month + "/" + day + " " + hour + ":" + min + ":" + sec;
+            datestr = month + "/" + date + "/" + day + " " + hour + ":" + min + ":" + sec;
         }
         return datestr;
     };
@@ -274,9 +275,9 @@ function WPOSUtil() {
                 //printcursymbol = String.fromCharCode(parseInt(WPOS.getConfigTable().pos.reccurrency));
             if (WPOS.hasOwnProperty('print')) {
                 printcursymbol = getPrintCurrencySymbol();
-                if (printcursymbol == "" && (curformat[0] == "£" || containsNonLatinCodepoints(curformat[0]))) {
+                if (printcursymbol == "" && (curformat[0] == "￡" || containsNonLatinCodepoints(curformat[0]))) {
                     // check for unicode characters and set default alt character if so
-                    printcursymbol = curformat[0] == "£" ? String.fromCharCode(156) : "$";
+                    printcursymbol = curformat[0] == "￡" ? String.fromCharCode(156) : "$";
                 }
             }
 
@@ -308,9 +309,9 @@ function WPOSUtil() {
 
     this.reloadPrintCurrencySymbol = function(){
         printcursymbol = getPrintCurrencySymbol();
-        if ((printcursymbol=="" && curformat!=null) && (curformat[0]=="£" || containsNonLatinCodepoints(curformat[0]))){
+        if ((printcursymbol=="" && curformat!=null) && (curformat[0]=="￡" || containsNonLatinCodepoints(curformat[0]))){
             // check for unicode characters and set default alt character if so
-            printcursymbol = curformat[0]=="£"?String.fromCharCode(156):"$";
+            printcursymbol = curformat[0]=="￡"?String.fromCharCode(156):"$";
         }
     };
 
@@ -328,6 +329,11 @@ function WPOSUtil() {
         return curformat[4]!=0;
     };
 
+    this.decimal2Places = function(value, nosymbol, usesymboloverride){
+        var result = number_format(value, 2, '.', '');
+        return result;
+    };
+    
     this.currencyFormat = function(value, nosymbol, usesymboloverride){
         loadCurrencyValues();
         var result = number_format(value, curformat[1], curformat[2], curformat[3]);

@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>WallacePOS - Administration</title>
+		<title>MODA MI - Administration</title>
         <meta name="copyright" content="Copyright (c) 2014 WallaceIT <micwallace@gmx.com> <https://www.gnu.org/licenses/lgpl.html>" />
         <meta name="description" content="overview &amp; stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -169,13 +169,14 @@
                                         Categories
                                     </a>
                                 </li>
-
+<!--
                                 <li id="menusuppliers" class="privmenuitem">
                                     <a href="#!suppliers">
                                         <i class="icon-double-angle-right"></i>
                                         Suppliers
                                     </a>
                                 </li>
+-->                                
 
                             </ul>
                         </li>
@@ -375,36 +376,36 @@
                                 <td><input id="custname" type="text"/><input id="custid" type="hidden"/></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right;"><label>Email:&nbsp;</label></td>
-                                <td><input id="custemail" type="text"/></td>
-                            </tr>
+                                <td style="display:none; text-align: right;"><label>Email:&nbsp;</label></td>
+                                <td><style="display:none;" input id="custemail" type="text"/></td>
+                            </tr>                           
                             <tr>
                                 <td style="text-align: right;"><label>Phone:&nbsp;</label></td>
                                 <td><input id="custphone" type="text"/></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right;"><label>Mobile:&nbsp;</label></td>
-                                <td><input id="custmobile" type="text"/></td>
+                                <td style="display:none; text-align: right;"><label>Mobile:&nbsp;</label></td>
+                                <td><style="display:none;" input id="custmobile" type="text"/></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right;"><label>Address:&nbsp;</label></td>
-                                <td><input id="custaddress" type="text"/></td>
+                                <td style="display:none; text-align: right;"><label>Address:&nbsp;</label></td>
+                                <td><style="display:none;" input id="custaddress" type="text"/></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right;"><label>Suburb:&nbsp;</label></td>
-                                <td><input id="custsuburb" type="text"/></td>
+                                <td style="display:none; text-align: right;"><label>Suburb:&nbsp;</label></td>
+                                <td><style="display:none;" input id="custsuburb" type="text"/></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right;"><label>Postcode:&nbsp;</label></td>
-                                <td><input id="custpostcode" type="text"/></td>
+                                <td style="display:none; text-align: right;"><label>Postcode:&nbsp;</label></td>
+                                <td><style="display:none;" input id="custpostcode" type="text"/></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right;"><label>State:&nbsp;</label></td>
-                                <td><input id="custstate" type="text"/></td>
+                                <td style="display:none; text-align: right;"><label>State:&nbsp;</label></td>
+                                <td><style="display:none;" input id="custstate" type="text"/></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right;"><label>Country:&nbsp;</label></td>
-                                <td><input id="custcountry" type="text"/></td>
+                                <td style="display:none; text-align: right;"><label>Country:&nbsp;</label></td>
+                                <td><style="display:none;" input id="custcountry" type="text"/></td>
                             </tr>
                         </table>
                     </div>
@@ -446,37 +447,39 @@
                     <td style="text-align: right;"><label>Name:&nbsp;</label></td>
                     <td><input id="newcustname" type="text"/></td>
                 </tr>
-                <tr>
-                    <td style="text-align: right;"><label>Email:&nbsp;</label></td>
-                    <td><input id="newcustemail" type="text"/><br/></td>
-                </tr>
+
                 <tr>
                     <td style="text-align: right;"><label>Phone:&nbsp;</label></td>
                     <td><input id="newcustphone" type="text"/></td>
                 </tr>
                 <tr>
-                    <td style="text-align: right;"><label>Mobile:&nbsp;</label></td>
-                    <td><input id="newcustmobile" type="text"/></td>
+                    <td style="display:none;text-align: right;"><label>Email:&nbsp;</label></td>
+                    <td><style="display:none;" input id="newcustemail" type="text" /><br/></td>
+                </tr> 
+
+                <tr>
+                    <td style="display:none; text-align: right;"><label>Mobile:&nbsp;</label></td>
+                    <td><style="display:none;" input id="newcustmobile" type="text"/></td>
                 </tr>
                 <tr>
-                    <td style="text-align: right;"><label>Address:&nbsp;</label></td>
-                    <td><input id="newcustaddress" type="text"/></td>
+                    <td style="display:none; text-align: right;"><label>Address:&nbsp;</label></td>
+                    <td><style="display:none;" input id="newcustaddress" type="text"/></td>
                 </tr>
                 <tr>
-                    <td style="text-align: right;"><label>Suburb:&nbsp;</label></td>
-                    <td><input id="newcustsuburb" type="text"/></td>
+                    <td style="display:none; text-align: right;"><label>Suburb:&nbsp;</label></td>
+                    <td><style="display:none;" input id="newcustsuburb" type="text"/></td>
                 </tr>
                 <tr>
-                    <td style="text-align: right;"><label>Postcode:&nbsp;</label></td>
-                    <td><input id="newcustpostcode" type="text"/></td>
+                    <td style="display:none; text-align: right;"><label>Postcode:&nbsp;</label></td>
+                    <td><style="display:none;" input id="newcustpostcode" type="text"/></td>
                 </tr>
                 <tr>
-                    <td style="text-align: right;"><label>State:&nbsp;</label></td>
-                    <td><input id="newcuststate" type="text"/></td>
+                    <td style="display:none; text-align: right;"><label>State:&nbsp;</label></td>
+                    <td><style="display:none;" input id="newcuststate" type="text"/></td>
                 </tr>
                 <tr>
-                    <td style="text-align: right;"><label>Country:&nbsp;</label></td>
-                    <td><input id="newcustcountry" type="text"/></td>
+                    <td style="display:none; text-align: right;"><label>Country:&nbsp;</label></td>
+                    <td><style="display:none;" input id="newcustcountry" type="text"/></td>
                 </tr>
             </table>
         </div>
@@ -547,9 +550,11 @@
             <div style="text-align: center;">
                 <div class="transinvoptions" style="text-align: center;">
                     <button class="btn btn-sm btn-success" onclick="WPOS.transactions.updateInvoice();"><i class='icon-edit bigger-110'></i>&nbsp; Save</button>
+                    <button class="btn btn-primary" onclick="WPOS.print.printReceipt($('#transref').text());"><i class="icon-print"></i>&nbsp;Print</button>                                        
                 </div>
                 <div class="transsaleoptions" style="text-align: center;">
                     <button class="btn btn-sm btn-success" onclick="WPOS.transactions.updateNotes();"><i class='icon-edit bigger-110'></i>&nbsp; Save</button>
+                    <button class="btn btn-primary" onclick="WPOS.print.printReceipt($('#transref').text());"><i class="icon-print"></i>&nbsp;Print</button>                    
                 </div>
             </div>
             </div>
@@ -629,11 +634,11 @@
                         <table width="100%" class="table">
                             <thead class="table-header">
                             <tr align="left">
-                                <th>Qty</th>
                                 <th>Name</th>
-                                <th>Unit</th>
-                                <th>Tax</th>
                                 <th>Price</th>
+                                <th>Qty</th>                                
+<!--                            <th>Tax</th>-->
+                                <th>Total</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -678,21 +683,27 @@
                 <input type="hidden" id="transitempriceval" value="0"/>
                 <label class="fixedlabel">Search: </label><input type="text" id="stitemsearch"/><br/>
                 <div class="space-8"></div>
-                <label class="fixedlabel">Qty: </label><input type="text" id="transitemqty" onchange="WPOS.transactions.calculateItemTotals();"/>
-                <div class="space-4"></div>
                 <label class="fixedlabel">Name: </label><input type="text" id="transitemname"/>
                 <div class="space-4"></div>
-                <label class="fixedlabel">Alt Name: </label><input type="text" id="transitemaltname"/><br/><small>Alternate language name</small>
+                <label class="fixedlabel">Qty: </label><input type="text" id="transitemqty" onchange="WPOS.transactions.calculateItemTotals();"/>
                 <div class="space-4"></div>
+<!--            <label class="fixedlabel">Alt Name: </label><input type="text" id="transitemaltname"/><br/><small>Alternate language name</small>-->
+<!--            <div class="space-4"></div>-->
                 <label class="fixedlabel">Description: </label><textarea style="width: 178px;" id="transitemdesc"></textarea>
+                <div class="space-4"></div>                
+<!--             <label class="fixedlabel">Price: </label><input type="text" id="transitemunit" onchange="WPOS.transactions.calculateItemTotals();"/>-->
+                <label class="fixedlabel">Price: </label><select type="text" id="transitemunit" class="unitselect" onchange="WPOS.transactions.calculateItemTotals();"/></select>
+
                 <div class="space-4"></div>
-                <label class="fixedlabel">Unit: </label><input type="text" id="transitemunit" onchange="WPOS.transactions.calculateItemTotals();"/>
+<!--            <label class="fixedlabel">Tax: </label><select type="text" id="transitemtaxid" class="taxselect" onchange="WPOS.transactions.calculateItemTotals();"></select> -->
+<!--            <label class="fixedlabel">Tax: </label>-->
+                <input type="hidden" id="transitemtaxid" value="0"/>                
+                <input type="hidden" id="transitemtaxid" onchange="WPOS.transactions.calculateItemTotals();"/>
                 <div class="space-4"></div>
-                <label class="fixedlabel">Tax: </label><select type="text" id="transitemtaxid" class="taxselect" onchange="WPOS.transactions.calculateItemTotals();"></select>
+                <label class="fixedlabel">Total: </label><span id="transitemprice">0</span><br/>                
                 <div class="space-4"></div>
                 <div id="transitemtax">
                 </div>
-                <label class="fixedlabel">Price: </label><span id="transitemprice">0</span><br/>
             </form>
         </div>
         <div id="transpaydialog" class="hide" style="padding-left: 20px; padding-right: 20px;">
@@ -859,7 +870,7 @@
 
         <!-- Scripts included on many of the pages -->
         <script src="../assets/js/wpos/utilities.js"></script>
-
+        <script src="../assets/js/jquery.mustache.js"></script>
         <script src="assets/js/jquery.dataTables.min.js"></script>
         <script src="assets/js/datatableSorting.js"></script>
         <script src="assets/js/jquery.dataTables.bootstrap.js"></script>
@@ -873,6 +884,7 @@
         <script src="assets/wpos/wpos.js"></script>
         <script src="assets/wpos/customers.js"></script>
         <script src="assets/wpos/transactions.js"></script>
+        <script src="assets/wpos/print.js"></script>   
 	</body>
 </html>
 

@@ -5,3 +5,11 @@ AddType application/x-httpd-php .appcache
       ExpiresDefault "access plus 0 seconds"
   </Files>
 </IfModule>
+
+RewriteEngine on
+
+#Force SSL
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+

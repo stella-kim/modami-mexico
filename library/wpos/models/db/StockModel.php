@@ -47,8 +47,13 @@ class StockModel extends DbConfig
      */
     public function create($storeditemid, $locationid, $stocklevel)
     {
+      
+        //hjkim 
+        $locationid=0;
+        
         $sql          = "INSERT INTO stock_levels (`storeditemid`, `locationid`, `stocklevel`, `dt`) VALUES (:storeditemid, :locationid, :stocklevel, now());";
-        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$stocklevel];
+        //$placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$stocklevel];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":stocklevel"=>$stocklevel];
 
         return $this->insert($sql, $placeholders);
     }
@@ -61,8 +66,13 @@ class StockModel extends DbConfig
      */
     public function setStockLevel($storeditemid, $locationid, $stocklevel){
 
+
+        //hjkim 
+        $locationid=0;
+        
         $sql = "UPDATE stock_levels SET `stocklevel`=:stocklevel WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
-        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$stocklevel];
+        //$placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$stocklevel];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":stocklevel"=>$stocklevel];
         $result=$this->update($sql, $placeholders);
         if ($result>0) // if row has been updated, return
             return $result;
@@ -71,7 +81,8 @@ class StockModel extends DbConfig
             return false;
 
         // Otherwise add a new stock record, none exists
-        return $this->create($storeditemid, $locationid, $stocklevel);
+        //return $this->create($storeditemid, $locationid, $stocklevel);
+        return $this->create($storeditemid, 0, $stocklevel);
     }
 
     /**
@@ -81,21 +92,192 @@ class StockModel extends DbConfig
      * @param bool $decrement
      * @return bool|int|string Returns false on failure, number of rows affected or a newly inserted id.
      */
+
+    //hjkim     
+    public function getStockLevel($storeditemid, $locationid){
+        //hjkim 
+        $locationid=0;
+
+       console.log($storeditemid);
+              console.log($storeditemid);
+              
+        //Logger::write("Stock Transfer111", "STOCK", $storeditemid);              
+        //Logger::write("Stock Transfer222", "STOCK", $locationid);              
+        
+
+        $sql = "SELECT stocklevel FROM stock_levels WHERE storeditemid = :storeditemid AND locationid  = :locationid";
+
+
+        //$placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0];
+
+
+        return $this->select($sql, $placeholders);
+
+    }
+         
     public function incrementStockLevel($storeditemid, $locationid, $amount, $decrement = false){
-        $sql = "UPDATE stock_levels SET `stocklevel`= GREATEST(`stocklevel` ".($decrement==true?'-':'+')." :stocklevel, 0) WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
-        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$amount];
+        //hjkim 
+        $locationid=0;
+        
+        //hjkim stock - minus 수정      
+        //$sql = "UPDATE stock_levels SET `stocklevel`= GREATEST(`stocklevel` ".($decrement==true?'-':'+')." :stocklevel, 0) WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+        $sql = "UPDATE stock_levels SET `stocklevel`= `stocklevel` ".($decrement==true?'-':'+')." :stocklevel WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+        //$sql = "UPDATE stock_levels SET `stocklevel`= isnull(select stocklevel from stock_levels where `storeditemid`=:storeditemid AND `locationid`=:locationid,0) ".($decrement==true?'-':'+')." :stocklevel WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+
+        //$placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$amount];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":stocklevel"=>$amount];
 
         $result = $this->update($sql, $placeholders);
+
         if ($result>0) return $result;
 
         if ($result===false) return false;
 
         if ($decrement===false){ // if adding stock and no record exists, create it
-            return $this->create($storeditemid, $locationid, $amount);
-        }
 
+        //return $this->create($storeditemid, $locationid, $amount);
+            return $this->create($storeditemid, 0, $amount);
+        }
+        
         return true;
     }
+
+    public function incrementStockLevel2($storeditemid, $locationid, $amount, $decrement = false){
+        //hjkim 
+        $locationid=0;
+        
+        //hjkim stock - minus 수정      
+        //$sql = "UPDATE stock_levels SET `stocklevel`= GREATEST(`stocklevel` ".($decrement==true?'-':'+')." :stocklevel, 0) WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+        $sql = "UPDATE stock_levels SET `stocklevel`= `stocklevel` ".($decrement==true?'-':'+')." :stocklevel WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+        //$sql = "UPDATE stock_levels SET `stocklevel`= (select stocklevel from stock_levels where `storeditemid`=:storeditemid AND `locationid`=:locationid) ".($decrement==true?'-':'+')." :stocklevel WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+        //$sql = "UPDATE stock_levels SET `stocklevel`= (select stocklevel from stock_levels where `storeditemid`=:storeditemid AND `locationid`=:locationid) ".($decrement==true?'-':'+')." :stocklevel WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";        
+        //$placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$amount];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":stocklevel"=>$amount];
+
+        Logger::write("update1 ", "STOCK", $sql);              
+        Logger::write("update2 ", "storeditemid", $storeditemid);              
+        Logger::write("update3 ", "locationid", $locationid);              
+        Logger::write("update4 ", "amount", $amount);                                              
+
+        
+
+        $result = $this->update($sql, $placeholders);
+
+        Logger::write("222update ", "result", $result);              
+        
+        
+
+         //$type="Sale";
+                //hjkim 
+        if($decrement==true)
+           $type="Sale";
+        else 
+           $type="Void";
+        
+        $auxid=-1;
+        $direction=0;
+        //        public function create($storeditemid, $locationid, $type, $amount, $auxid=-1, $direction=0){
+        $sql = "INSERT INTO stock_history (storeditemid, locationid, auxid, auxdir, type, amount, dt) VALUES (:storeditemid, :locationid, :auxid, :auxdir, :type, ".($decrement==true?'-':'+').":amount, '".date("Y-m-d H:i:s")."');";
+//        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":auxid"=>$auxid, ":auxdir"=>$direction, ":type"=>$type, ":amount"=>$amount];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":auxid"=>$auxid, ":auxdir"=>$direction, ":type"=>$type, ":amount"=>$amount];
+        $this->insert($sql, $placeholders);
+
+
+        Logger::write("333update ", "result", $sql);              
+        if ($result>0) return $result;
+
+        if ($result===false) return false;
+
+        if ($decrement===false){ // if adding stock and no record exists, create it
+
+            //return $this->create($storeditemid, $locationid, $amount);
+            return $this->create($storeditemid, 0, $amount);
+        }
+        
+        return true;
+    }
+
+
+
+    public function AdjustStockLevel($storeditemid, $locationid, $amount, $decrement = false){
+        //hjkim 
+        $locationid=0;
+        
+        //hjkim stock - minus 수정      
+//        $sql = "UPDATE stock_levels SET `stocklevel`= GREATEST(`stocklevel` ".($decrement==true?'-':'+')." :stocklevel, 0) WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+        $sql = "UPDATE stock_levels SET `stocklevel`= `stocklevel` ".($decrement==true?'-':'+')." :stocklevel WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+//        $sql = "UPDATE stock_levels SET `stocklevel`= (select stocklevel from stock_levels where `storeditemid`=:storeditemid AND `locationid`=:locationid) ".($decrement==true?'-':'+')." :stocklevel WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+
+//        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$amount];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":stocklevel"=>$amount];
+
+        $result = $this->update($sql, $placeholders);
+
+
+        $type="Adjust";
+                //hjkim 
+        //if(decrement==true?$type="Sale":$type="Void");
+        $auxid=-1;
+        $direction=0;
+        //        public function create($storeditemid, $locationid, $type, $amount, $auxid=-1, $direction=0){
+        $sql = "INSERT INTO stock_history (storeditemid, locationid, auxid, auxdir, type, amount, dt) VALUES (:storeditemid, :locationid, :auxid, :auxdir, :type, ".($decrement==true?'-':'+').":amount, '".date("Y-m-d H:i:s")."');";
+        //$placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":auxid"=>$auxid, ":auxdir"=>$direction, ":type"=>$type, ":amount"=>$amount];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":auxid"=>$auxid, ":auxdir"=>$direction, ":type"=>$type, ":amount"=>$amount];
+        $this->insert($sql, $placeholders);
+
+
+        if ($result>0) return $result;
+
+        if ($result===false) return false;
+
+        if ($decrement===false){ // if adding stock and no record exists, create it
+
+            //return $this->create($storeditemid, $locationid, $amount);
+            return $this->create($storeditemid, 0, $amount);
+        }
+        
+        return true;
+    }
+
+
+    public function incrementStockLevelSale($storeditemid, $locationid, $amount, $decrement = false){
+        
+        //hjkim 
+        $locationid=0;
+        
+        $sql = "UPDATE stock_levels SET `stocklevel`= GREATEST(`stocklevel` ".($decrement==true?'-':'+')." :stocklevel, 0) WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+        //$sql = "UPDATE stock_levels SET `stocklevel`= GREATEST((select stocklevel from stock_levels where `storeditemid`=:storeditemid AND `locationid`=:locationid) ".($decrement==true?'-':'+')." :stocklevel, 0) WHERE `storeditemid`=:storeditemid AND `locationid`=:locationid";
+
+        //$placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":stocklevel"=>$amount];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":stocklevel"=>$amount];
+
+        $result = $this->update($sql, $placeholders);
+        
+        
+        //hjkim 
+        $type="Sale";
+        $auxid=-1;
+        $direction=0;
+        //public function create($storeditemid, $locationid, $type, $amount, $auxid=-1, $direction=0){
+        $sql = "INSERT INTO stock_history (storeditemid, locationid, auxid, auxdir, type, amount, dt) VALUES (:storeditemid, :locationid, :auxid, :auxdir, :type, ".($decrement==true?'-':'+').":amount, '".date("Y-m-d H:i:s")."');";
+        //$placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>$locationid, ":auxid"=>$auxid, ":auxdir"=>$direction, ":type"=>$type, ":amount"=>$amount];
+        $placeholders = [":storeditemid"=>$storeditemid, ":locationid"=>0, ":auxid"=>$auxid, ":auxdir"=>$direction, ":type"=>$type, ":amount"=>$amount];
+        $this->insert($sql, $placeholders);
+
+        if ($result>0) return $result;
+
+        if ($result===false) return false;
+
+        if ($decrement===false){ // if adding stock and no record exists, create it
+
+            //return $this->create($storeditemid, $locationid, $amount);
+            return $this->create($storeditemid, 0, $amount);
+        }
+        
+        return true;
+    }
+
 
     /**
      * Returns an array of stock records, optionally including special reporting values

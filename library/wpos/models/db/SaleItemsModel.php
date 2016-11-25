@@ -166,9 +166,12 @@ class SaleItemsModel extends DbConfig
      * @return array|bool Returns false on an unexpected failure or the rows found by the statement. Returns an empty array when nothing is found
      */
     public function edit($itemid, $sitemid, $saleitemid=0, $qty, $name, $desc, $taxid, $tax, $unit, $price){
-        $sql = 'UPDATE sale_items SET storeditemid=:sitemid, saleitemid=:saleitemid, qty=:qty, name=:name, description=:desc, taxid=:taxid, tax=:tax, unit=:unit, price=:price WHERE id= :id';
-        $placeholders = [":id"=>$itemid, ":sitemid"=>$sitemid, ":saleitemid"=>$saleitemid, ":qty"=>$qty, ":name"=>$name, ":desc"=>$desc, ":taxid"=>$taxid, ":tax"=>json_encode($tax), ":unit"=>$unit, ":price"=>$price];
 
+
+        $sql = 'UPDATE sale_items SET storeditemid=:sitemid, saleitemid=:saleitemid, qty=:qty, name=:name, description=:desc, taxid=:taxid, tax=:tax, unit=:unit, price=:price WHERE id= :id';
+
+        $placeholders = [":id"=>$itemid, ":sitemid"=>$sitemid, ":saleitemid"=>$saleitemid, ":qty"=>$qty, ":name"=>$name, ":desc"=>$desc, ":taxid"=>$taxid, ":tax"=>json_encode($tax), ":unit"=>$unit, ":price"=>$price];
+            
         return $this->update($sql, $placeholders);
     }
 

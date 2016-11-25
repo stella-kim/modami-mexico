@@ -527,7 +527,7 @@
             xaxis: {
                 mode: "time",
                 minTickSize: [1, "day"],
-                timeformat: "%d/%m",
+                timeformat: "%m/%d",
                 timezone: "browser"
             },
             yaxis: {

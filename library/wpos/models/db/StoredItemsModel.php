@@ -45,9 +45,10 @@ class StoredItemsModel extends DbConfig
      */
     public function create($data)
     {
-        $sql          = "INSERT INTO stored_items (`data`, `supplierid`, `categoryid`, `code`, `name`, `price`) VALUES (:data, :supplierid, :categoryid, :code, :name, :price);";
-        $placeholders = [":data"=>json_encode($data),":supplierid"=>$data->supplierid, ":categoryid"=>$data->categoryid, ":code"=>$data->code, ":name"=>$data->name, ":price"=>$data->price];
-
+        //$sql          = "INSERT INTO stored_items (`data`, `supplierid`, `categoryid`, `code`, `name`, `price`) VALUES (:data, :supplierid, :categoryid, :code, :name, :price);";
+        $sql          = "INSERT INTO stored_items (`data`, `categoryid`, `code`, `name`, `price`) VALUES (:data, :categoryid, :code, :name, :price);";
+        //$placeholders = [":data"=>json_encode($data),":supplierid"=>$data->supplierid, ":categoryid"=>$data->categoryid, ":code"=>$data->code, ":name"=>$data->name, ":price"=>$data->price];
+        $placeholders = [":data"=>json_encode($data),":categoryid"=>$data->categoryid, ":code"=>$data->code, ":name"=>$data->name, ":price"=>$data->price ];
         return $this->insert($sql, $placeholders);
     }
 
@@ -95,8 +96,10 @@ class StoredItemsModel extends DbConfig
     public function edit($id, $data)
     {
 
-        $sql = "UPDATE stored_items SET data= :data, supplierid= :supplierid, categoryid= :categoryid, code= :code, name= :name, price= :price WHERE id= :id;";
-        $placeholders = [":id"=>$id, ":data"=>json_encode($data), ":supplierid"=>$data->supplierid, ":categoryid"=>$data->categoryid, ":code"=>$data->code, ":name"=>$data->name, ":price"=>$data->price];
+//        $sql = "UPDATE stored_items SET data= :data, supplierid= :supplierid, categoryid= :categoryid, code= :code, name= :name, price= :price WHERE id= :id;";
+//        $placeholders = [":id"=>$id, ":data"=>json_encode($data), ":supplierid"=>$data->supplierid, ":categoryid"=>$data->categoryid, ":code"=>$data->code, ":name"=>$data->name, ":price"=>$data->price];
+        $sql = "UPDATE stored_items SET data= :data, categoryid= :categoryid, code= :code, name= :name, price= :price WHERE id= :id;";
+        $placeholders = [":id"=>$id, ":data"=>json_encode($data),":categoryid"=>$data->categoryid, ":code"=>$data->code, ":name"=>$data->name, ":price"=>$data->price];
 
         return $this->update($sql, $placeholders);
     }

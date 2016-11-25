@@ -29,11 +29,11 @@
                             </th>
                             <th>ID</th>
                             <th>Name</th>
-                            <th>Email</th>
+<!--                        <th>Email</th> -->
                             <th>Phone</th>
-                            <th>Mobile</th>
-                            <th>Suburb</th>
-                            <th>Postcode</th>
+<!--                        <th>Mobile</th> -->
+<!--                        <th>Suburb</th> -->
+<!--                        <th>Postcode</th>-->
                             <th></th>
                         </tr>
                         </thead>
@@ -65,11 +65,11 @@
                     { mData:null, sDefaultContent:'<div style="text-align: center"><label><input class="ace" type="checkbox"><span class="lbl"></span></label><div>', "bSortable": false, sClass:"hidden-480 hidden-320 hidden-xs noexport" },
                     { "mData":"id" },
                     { "mData":"name" },
-                    { "mData":"email" },
+//                  { "mData":"email" },
                     { "mData":"phone" },
-                    { "mData":"mobile" },
-                    { "mData":"suburb" },
-                    { "mData":"postcode" },
+//                  { "mData":"mobile" },
+//                  { "mData":"suburb" },
+//                  { "mData":"postcode" },
                     { mData:null, sDefaultContent:'<div class="action-buttons"><a class="green" onclick="WPOS.customers.openCustomerDialog($(this).closest(\'tr\').find(\'td\').eq(1).text());"><i class="icon-pencil bigger-130"></i></a><a class="red" onclick="WPOS.customers.deleteCustomer($(this).closest(\'tr\').find(\'td\').eq(1).text())"><i class="icon-trash bigger-130"></i></a></div>', "bSortable": false }
                 ] } );
         // insert table wrapper

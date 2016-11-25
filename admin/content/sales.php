@@ -177,7 +177,9 @@
                     { "sType": "timestamp", "mData":function(data, type, val){return WPOS.util.getDateFromTimestamp(data.processdt);} },
                     { "sType": "currency", "mData":function(data,type,val){return WPOS.util.currencyFormat(data["total"]);} },
                     { "sType": "html", "mData":function(data,type,val){return getStatusHtml(getTransactionStatus(data));} },
-                    { "sType": "html", mData:null, sDefaultContent:'<div class="action-buttons"><a class="green" onclick="WPOS.transactions.openTransactionDialog($(this).closest(\'tr\').find(\'.reflabel\').attr(\'title\'));"><i class="icon-pencil bigger-130"></i></a><a class="red" onclick="WPOS.transactions.deleteTransaction($(this).closest(\'tr\').find(\'.reflabel\').attr(\'title\'))"><i class="icon-trash bigger-130"></i></a></div>', "bSortable": false }
+//                    { "sType": "html", mData:null, sDefaultContent:'<div class="action-buttons"><a class="green" onclick="WPOS.transactions.openTransactionDialog($(this).closest(\'tr\').find(\'.reflabel\').attr(\'title\'));"><i class="icon-pencil bigger-130"></i></a><a class="red" onclick="WPOS.transactions.deleteTransaction($(this).closest(\'tr\').find(\'.reflabel\').attr(\'title\'))"><i class="icon-trash bigger-130"></i></a></div>', "bSortable": false }
+{ "sType": "html","mData":function(data, type, val){ return '<div class="action-buttons">'+'<a class="green" onclick="WPOS.transactions.openTransactionDialog($(this).closest(\'tr\').find(\'.reflabel\').attr(\'title\'));"><i class="icon-pencil bigger-130"></i></a>'+
+                        (getTransactionStatus(data)!=2?'': '<a class="red" onclick="WPOS.transactions.deleteTransaction($(this).closest(\'tr\').find(\'.reflabel\').attr(\'title\'))"><i class="icon-trash bigger-130"></i></a>')+'</div>'; }, "bSortable": false  }
                 ] } );
         // insert table wrapper
         $(".dataTables_wrapper table").wrap("<div class='table_wrapper'></div>");
@@ -185,7 +187,7 @@
         $("#salestable_length").append('&nbsp;&nbsp;<div style="display: inline-block;"><label>Range: <input type="text" id="transstime" onclick="$(this).blur();" /></label> <label>to <input type="text" id="transetime" onclick="$(this).blur();" /></label></div>');
 
         var sselect = $("#transstime"), eselect =$("#transetime");
-        sselect.datepicker({dateFormat:"dd/mm/yy", maxDate: new Date(etime),
+        sselect.datepicker({dateFormat:"mm/dd/yy", maxDate: new Date(etime),
             onSelect: function(text, inst){
                 var date = $("#transstime").datepicker("getDate");
                 date.setHours(0); date.setMinutes(0); date.setSeconds(0);
@@ -193,7 +195,7 @@
                 reloadSalesData();
             }
         });
-        eselect.datepicker({dateFormat:"dd/mm/yy", maxDate: new Date(etime),
+        eselect.datepicker({dateFormat:"mm/dd/yy", maxDate: new Date(etime),
             onSelect: function(text, inst){
                 var date = $("#transetime").datepicker("getDate");
                 date.setHours(23); date.setMinutes(59); date.setSeconds(59);

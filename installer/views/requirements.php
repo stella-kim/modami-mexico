@@ -69,7 +69,7 @@
                 Apache Configuration: Node.js (Proxy Web Socket Tunnel)
             </li>
             <li>
-                <i class="icon icon-large icon-check <?php echo($https=(isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!="off")?"green":"red"); ?>"></i>
+                <i class="icon icon-large icon-check <?php echo($https=(isset($_SERVER['HTTP_X_FORWARDED_PROTO'])&&$_SERVER['HTTP_X_FORWARDED_PROTO']!="off")?"green":"red"); ?>"></i>
                 Apache Configuration: HTTPS <?php echo($https?"Active":"is recommended") ?>
             </li>
             <li>

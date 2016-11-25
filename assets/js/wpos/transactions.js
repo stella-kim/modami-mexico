@@ -505,8 +505,8 @@ function WPOSTransactions() {
                 if (sale!=false){
                     // set new notes
                     sale.salenotes = notes;
-                    if (WPOS.sales.isSaleOffline(ref)===true){
-                        WPOS.sales.updateOfflineSale(sale);
+                    if (WPOS.trans.isSaleOffline(ref)===true){
+                        WPOS.trans.updateOfflineSale(sale);
                     } else {
                         WPOS.updateSalesTable(ref, sale)
                     }

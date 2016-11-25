@@ -236,7 +236,7 @@ class WposTransactions {
                         $wposStock = new WposAdminStock();
                         foreach($data->items as $item){
                             if ($item->sitemid>0){
-                                $wposStock->incrementStockLevel($item->sitemid, $data->locid, $item->qty, false);
+                                $wposStock->incrementStockLevel2($item->sitemid, $data->locid, $item->qty, false);
                             }
                         }
                     }
@@ -310,9 +310,11 @@ class WposTransactions {
                     if (sizeof($refitems)>0){ // if its a refund, remove qty refunded
                         $saleItemsMdl = new SaleItemsModel();
                         // Decrement refunded quantities in the sale_items table
+                        $wposStock = new WposAdminStock(); //hjkim
                         foreach ($refitems as $item){
                             $saleItemsMdl->incrementQtyRefunded($this->data->id, $item->id, $item->numreturned, false);
-                        }
+                            $wposStock->incrementStockLevel2($item->sitemid, 0,  $item->numreturned, true);//hjkim
+                        }                        
                     }
                     if (!$salesMdl->edit($this->data->id, null, json_encode($jsondata), $status)){
                         $result["error"] = "Could not update sales table. Error:".$salesMdl->errorInfo;
@@ -323,7 +325,7 @@ class WposTransactions {
                             $wposStock = new WposAdminStock();
                             foreach($jsondata->items as $item){
                                 if ($item->sitemid>0){
-                                    $wposStock->incrementStockLevel($item->sitemid, $jsondata->locid, $item->qty, true);
+                                    $wposStock->incrementStockLevel2($item->sitemid, $jsondata->locid, $item->qty, true);
                                 }
                             }
                         }

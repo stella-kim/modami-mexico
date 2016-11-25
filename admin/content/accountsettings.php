@@ -346,8 +346,8 @@
         var stime = date.getTime();
         date.setHours(23); date.setMinutes(59); date.setSeconds(59);
         var etime = date.getTime();
-        exstime.datepicker({dateFormat:"dd/mm/yy", maxDate: new Date(stime)});
-        exetime.datepicker({dateFormat:"dd/mm/yy", maxDate: new Date(etime)});
+        exstime.datepicker({dateFormat:"mm/dd/yy", maxDate: new Date(stime)});
+        exetime.datepicker({dateFormat:"mm/dd/yy", maxDate: new Date(etime)});
         // set to the last day
         exstime.datepicker('setDate', new Date(stime));
         exetime.datepicker('setDate', new Date(etime));

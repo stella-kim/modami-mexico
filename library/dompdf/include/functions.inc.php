@@ -266,7 +266,7 @@ function explode_url($url) {
 
     } else {
       // generate a url to access the file if no real path found.
-      $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+      $protocol = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'on' ? 'https://' : 'http://';
 
       $host = isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : php_uname("n");
 

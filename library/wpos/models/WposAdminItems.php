@@ -49,7 +49,8 @@ class WposAdminItems {
     public function addStoredItem($result)
     {
         // validate input
-        $jsonval = new JsonValidate($this->data, '{"code":"","qty":1, "name":"", "taxid":1, "price":-1,"type":""}');
+//      $jsonval = new JsonValidate($this->data, '{"code":"","qty":1, "name":"", "taxid":1, "price":-1,"type":""}');
+        $jsonval = new JsonValidate($this->data, '{"code":"","qty":1, "name":"","price":-1,"type":""}');
         if (($errors = $jsonval->validate()) !== true) {
             $result['error'] = $errors;
             return $result;
@@ -58,7 +59,7 @@ class WposAdminItems {
         $itemMdl = new StoredItemsModel();
         $this->data->code = strtoupper($this->data->code); // make sure stockcode is upper case
         if (sizeof($itemMdl->get(null, $this->data->code)) > 0) {
-            $result['error'] = "An item with that stockcode already exists";
+            $result['error'] = "An item with that code already exists";
             return $result;
         }
         // create the new item
@@ -86,7 +87,8 @@ class WposAdminItems {
     public function updateStoredItem($result)
     {
         // validate input
-        $jsonval = new JsonValidate($this->data, '{"id":1, "code":"", "qty":1, "name":"", "taxid":1, "price":-1}');
+//      $jsonval = new JsonValidate($this->data, '{"id":1, "code":"", "qty":1, "name":"", "taxid":1, "price":-1}');
+        $jsonval = new JsonValidate($this->data, '{"id":1, "code":"", "qty":1, "name":"", "price":-1}');
         if (($errors = $jsonval->validate()) !== true) {
             $result['error'] = $errors;
             return $result;
@@ -98,7 +100,7 @@ class WposAdminItems {
         if (sizeof($dupitems) > 0) {
             $dupitem = $dupitems[0];
             if ($dupitem['id'] != $this->data->id) {
-                $result['error'] = "An item with that stockcode already exists";
+                $result['error'] = "An item with that code already exists";
                 return $result;
             }
         }

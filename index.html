@@ -4,7 +4,7 @@
     <meta name="copyright" content="Copyright (c) 2014 WallaceIT <micwallace@gmx.com> <https://www.gnu.org/licenses/lgpl.html>" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>WallacePOS</title>
+    <title>MODA MI</title>
 
     <link rel="shortcut icon" href="/assets/images/favicon.ico">
     <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
@@ -65,9 +65,9 @@
 <body>
 <div id="wrapper">
 <ul class="navbar overflow-hidden">
-    <li onclick="setItemListPadding();"><a href="#tabs-1">Till</a></li>
+    <li onclick="setItemListPadding();"><a href="#tabs-1">POS</a></li>
     <li onclick="WPOS.trans.setupTransactionView();"><a href="#tabs-2">Sales</a></li>
-    <li onclick="WPOS.reports.populateOverview();"><a href="#tabs-3">Reports</a></li>
+    <li onclick="WPOS.reports.populateOverview();"><a href="#tabs-3" style="display: none;">Reports</a></li>   
     <li><a href="#tabs-4">Settings</a></li>
     <button onClick="WPOS.logout();" style="float:right; height: 45px;" class="btn">Logout</button>
     <button title="Expand window" id="window_width_toggle" onClick="expandWindow();" style="float:right; vertical-align: middle; margin-top: 10px; margin-right: 5px; margin-left: 5px;" class="btn btn-xs btn-primary"><i class="icon icon-expand"></i></button>
@@ -80,11 +80,13 @@
             <div id="items" style="padding:0;" class="ui-widget-content">
                 <div style="margin-bottom: 10px;">
                     <div class="inline">
+<!-- hjkim mx                    
                         <div class="inline">
                             <label><div class="hlabel inline">Stock Code:&nbsp;</div><input style="width: 100px;" id="codeinput" type="text" onkeypress="if(event.keyCode=='13' || event.keyCode=='7'){ WPOS.items.addItemFromStockCode($('#codeinput').val()); }"/></label>
                             <button class="btn btn-xs field-button field-button-attach" style="vertical-align: top;" onclick="WPOS.items.addItemFromStockCode($('#codeinput').val());">Add</button>
                         </div>
                         &nbsp;&nbsp;
+-->                                                
                         <div class="inline">
                             <label><div class="hlabel inline">Stock Search:&nbsp;</div><input id="itemsearch" type="text"/></label>
                         </div>
@@ -98,12 +100,14 @@
                 <table style="width: 100%; margin-bottom: 0;" class="table table-striped table-bordered">
                     <thead class="table-header">
                     <tr style="text-align: left">
-                        <th>Qty</th>
                         <th>Name</th>
-                        <th>Unit</th>
-                        <th>Options</th>
-                        <th>Tax</th>
+                        <th>Description</th>
+                        <th>Unit</th>                        
+                        <th>Qty</th>
                         <th>Price</th>
+<!--                    <th>Options</th> -->
+<!--                    <th>Tax</th>   -->
+                        <th>Total</th>
                         <th style="text-align: center;">X</th>
                     </tr>
                     </thead>
@@ -116,11 +120,11 @@
                 </div>
                 <span id="invaliditemnotice" style="float: left; display: none;" class="text-warning bigger-110 red"><i
                         class="icon-warning-sign"></i>Invalid items marked in red will not be added to the sale</span>
-                <button style="float:right; font-size: 14px !important; margin-top:10px;" class="btn btn-sm btn-primary" onClick="WPOS.items.addManualItemRow();">Add Item</button>
+<!--                <button style="float:right; font-size: 14px !important; margin-top:10px;" class="btn btn-sm btn-primary" onClick="WPOS.items.addManualItemRow();">Add Item</button> -->
             </div>
-            <div id="totals">
-                <div style="display:inline-block; max-width:450px; vertical-align:top;">
-                    <div class="totalsbox">
+            <div id="totals" >
+                <div style="display:inline-block; max-width:450px; vertical-align:top;margin-top:-50px; float:right">
+                <div class="totalsbox" style="display:none">
                         <div>
                             <div class="totalslabel">Subtotal:</div>
                             <div class="totalsval"><span id="subtotal">$0.00</span></div>
@@ -130,16 +134,20 @@
                             <div class="totalsval"><input onChange="WPOS.sales.updateDiscount();" size="2" id="salediscount" type="text" class="numpad" value="0" autocomplete="off"/><strong>%</strong>&nbsp;<span id="discounttxt">($0.00)</span></div>
                         </div>
                     </div>
+
                     <div class="totalsbox">
-                        <div>
+<!--                    <div>
                             <div class="totalslabel">Tax:</div>
                             <div class="totalsval"><span id="totaltax">$0.00</span></div>
                         </div>
+-->                        
                         <div>
                             <div class="totalslabel">Total:</div>
                             <div class="totalsval"><span id="total">$0.00</span></div>
                         </div>
                     </div>
+                     <input id="custid" type="hidden" value="0" />                    
+<!--
                     <div class="order_terminal_options" style="margin-top: 10px;">
                         <label class="fixedlabel" style="margin-right: 5px;"><input type="radio" id="radio_takeaway" name="eatin" value="0" onclick="$('#tablenumber').val(0).prop('readonly', true);" checked="checked"/><b>&nbsp;Take Away</b></label>
                         <label class="fixedlabel" style="margin-right: 5px;"><input type="radio" id="radio_eatin" name="eatin" value="1" onclick="$('#tablenumber').prop('readonly', false);"/><b>&nbsp;Eat In</b></label>
@@ -167,21 +175,25 @@
                             <td><textarea id="salenotes" name="salenotes" autocomplete="off"></textarea></td>
                         </tr>
                     </table>
+-->                    
                 </div>
+
                 <div id="regkey-container">
                         <div id="regkey-inner">
                         <div id="registerkeydiv">
-                            <button class="regbtn btn btn-success" onClick="WPOS.sales.showPaymentDialog();">Process
+                            <button class="regbtn btn btn-success" onClick="WPOS.sales.showPaymentDialog();">Pay
                             </button>
-                            <button class="regbtn btn btn-danger" onClick="WPOS.sales.userAbortSale();">Abort</button>
-                            <button class="regbtn btn" onclick="WPOS.print.openCashDraw();">Till</button>
-                            <button class="regbtn btn" onclick="WPOS.trans.recallLastTransaction();">Recall</button>
+                            <button class="regbtn btn btn-danger" onClick="WPOS.sales.userAbortSale();">Cancel</button>
+<!--                        <button class="regbtn btn" onclick="WPOS.print.openCashDraw();">Till</button> -->
+<!--                        <button class="regbtn btn" onclick="WPOS.trans.recallLastTransaction();">Recall</button>-->
                         </div>
+<!--
                         <div>
                             <button onclick="WPOS.trans.showTransactionView();" class="regbtn btn btn-primary"
                                     style="width:153px; height:50px; display:inline-block;">Transactions
                             </button>
                         </div>
+-->                        
                         </div>
                 </div>
             </div>
@@ -197,7 +209,7 @@
         </div>
     </div>
 </div>
-<div id="tabs-2">
+<div id="tabs-2" style="display:none">
     <div id="remtransearch">
         <label>Global Ref Lookup:</label><br/>
         <label>Reference: <input id="remsearchref" type="text"/></label>
@@ -221,7 +233,7 @@
         </tbody>
     </table>
 </div>
-<div id="tabs-3">
+<div id="tabs-3" style="display:none">
     <div class="row">
     <div class="col-md-8">
         <div class="widget-box transparent">
@@ -548,7 +560,7 @@
                                             </div>
                                             <div class="settings-row printoptions" style="display: inline-block;">
                                                 <button class="btn btn-primary btn-xs field-button" onclick="WPOS.print.testReceiptPrinter('receipts');">Test</button>
-                                                <button class="btn btn-primary btn-xs field-button" onclick="WPOS.print.printQrCode();">Print QR</button>
+                                                <button class="btn btn-primary btn-xs field-button" onclick="WPOS.print.printQrCode();">Print QR</button>  
                                             </div>
                                         </div>
                                     </div>
@@ -901,14 +913,14 @@
         </div>
         <div style="margin-top: 20px;">
             <button class="btn btn-xs btn-primary" onclick="WPOS.sales.addPayment('cash');">Cash</button>
-            <button class="btn btn-xs btn-primary" onclick="WPOS.sales.addPayment('credit');">Credit</button>
+<!--        <button class="btn btn-xs btn-primary" onclick="WPOS.sales.addPayment('credit');">Credit</button>
             <button class="btn btn-xs btn-primary" onclick="WPOS.sales.addPayment('eftpos');">Eftpos</button>
-            <button class="btn btn-xs btn-primary" onclick="WPOS.sales.addPayment('cheque');">Cheque</button>
-            <button style="float: right;" class="btn btn-xs btn-primary" onclick="WPOS.sales.addAdditionalPayment();">Add Payment</button>
+            <button class="btn btn-xs btn-primary" onclick="WPOS.sales.addPayment('cheque');">Cheque</button> 
+            <button style="float: right;" class="btn btn-xs btn-primary" onclick="WPOS.sales.addAdditionalPayment();">Add Payment</button> -->
         </div>
     </div>
     <button id="endsalebtn" class="btn btn-success" onclick="WPOS.sales.processSale();">Complete</button>
-    <button id="savesalebtn" class="btn btn-primary" onclick="WPOS.sales.saveOrder();">Add Order</button>
+<!--    <button id="savesalebtn" class="btn btn-primary" onclick="WPOS.sales.saveOrder();">Add Order</button>-->
     <button class="btn btn-danger" onClick="$('#paymentsdiv').dialog('close');">Cancel</button>
 </div>
 <div id="custdiv" style="display:none;" title="Customer Details">
@@ -948,8 +960,8 @@
             </div>
             <div id="transoptions" style="text-align: center; margin-bottom: 10px; margin-top: 10px;" class="col-sm-6">
                 <div id="voidbuttons" style="display: inline-block;">
-                    <button class="btn btn-danger" onclick="WPOS.sales.openVoidDialog($('#transref').text());"><i class="icon-ban-circle"></i>&nbsp;Void</button>
-                    <button class="btn btn-warning" onclick="WPOS.sales.openRefundDialog($('#transref').text());"><i class="icon-backward"></i>&nbsp;Refund</button>
+                    <button style="display:none" class="btn btn-danger" onclick="WPOS.sales.openVoidDialog($('#transref').text());"><i class="icon-ban-circle"></i>&nbsp;Void</button>
+                    <button style="display:none" class="btn btn-warning" onclick="WPOS.sales.openRefundDialog($('#transref').text());"><i class="icon-backward"></i>&nbsp;Refund</button>
                 </div>
                 <div id="orderbuttons" style="display: inline-block;">
                     <button class="btn btn-success" onclick="WPOS.sales.loadOrder($('#transref').text());"><i class="icon-check"></i>&nbsp;Complete</button>

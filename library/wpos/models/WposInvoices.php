@@ -191,7 +191,7 @@ class WposInvoices {
                     $wposStock = new WposAdminStock();
                     foreach($this->invoice->items as $item){
                         if ($item->sitemid>0){
-                            $wposStock->incrementStockLevel($item->sitemid, 0, $item->qty, true);
+                            $wposStock->incrementStockLevel2($item->sitemid, 0, $item->qty, true);
                         }
                     }
                 }
@@ -339,7 +339,7 @@ class WposInvoices {
             // decrement stock
             if ($this->data->sitemid>0){
                 $wposStock = new WposAdminStock();
-                $wposStock->incrementStockLevel($this->data->sitemid, 0, $this->data->qty, true);
+                $wposStock->incrementStockLevel2($this->data->sitemid, 0, $this->data->qty, true);
             }
             // Create transaction history record
             WposTransactions::addTransactionHistory($this->id, $_SESSION['userId'], "Modified", "Item Added");
@@ -392,7 +392,7 @@ class WposInvoices {
                 if ($qtydifval>0){
                     $wposStock = new WposAdminStock();
                     // increment/decrement stock depending on difference calced above
-                    $wposStock->incrementStockLevel($this->data->sitemid, 0, $qtydifval, $qtydifdec);
+                    $wposStock->incrementStockLevel2($this->data->sitemid, 0, $qtydifval, $qtydifdec);
                 }
             }
             // Create transaction history record
@@ -437,7 +437,7 @@ class WposInvoices {
             // increment stock
             if ($this->data->sitemid>0){
                 $wposStock = new WposAdminStock();
-                $wposStock->incrementStockLevel($this->data->sitemid, 0, $this->data->qty, false);
+                $wposStock->incrementStockLevel2($this->data->sitemid, 0, $this->data->qty, false);
             }
             // Create transaction history record
             WposTransactions::addTransactionHistory($this->id, $_SESSION['userId'], "Modified", "Item Removed");
@@ -616,7 +616,7 @@ class WposInvoices {
     }
 
     private function saveInvoiceData(){
-        if ($this->invMdl->edit($this->id, null, json_encode($this->invoice), $this->invoice->status, $this->invoice->discount, $this->invoice->total, $this->invoice->balance)===false){
+        if ($this->invMdl->edit($this->id, null, json_encode($this->invoice), $this->invoice->status, $this->invoice->discount, $this->invoice->total, $this->invoice->balance, $this->invoice->processdt,  $this->invoice->duedt)===false){
             return false;
         }
         return true;

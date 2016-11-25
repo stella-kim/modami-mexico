@@ -439,8 +439,10 @@ class WposPosSale {
                     $this->deviceid = $refund->deviceid; // set device id for the broadcast function
                     $voidMdl->create($this->id, $refund->userid, $refund->deviceid, $refund->locationid, $refund->reason, $refund->method, $refund->amount, json_encode($refund->items), 0, $refund->processdt);
                     // Increment refunded quantities in the sale_items table
+                    $wposStock = new WposAdminStock(); //hjkim
                     foreach ($refund->items as $item){
                         $saleItemsMdl->incrementQtyRefunded($this->id, $item->ref, $item->numreturned);
+                        $wposStock->incrementStockLevel2($item->sitemid, $this->jsonobj->locid,  $item->numreturned, false);//hjkim                        
                     }
                     // Create transaction history record
                     WposTransactions::addTransactionHistory($this->id, isset($_SESSION['userId'])?$_SESSION['userId']:0, "Refunded", "Sale refunded");
@@ -464,7 +466,7 @@ class WposPosSale {
                         $wposStock = new WposAdminStock();
                         foreach($this->jsonobj->items as $item){
                             if ($item->sitemid>0){
-                                $wposStock->incrementStockLevel($item->sitemid, $this->jsonobj->locid, $item->qty, false);
+                                $wposStock->incrementStockLevel2($item->sitemid, $this->jsonobj->locid, $item->qty, false);
                             }
                         }
                     }
@@ -495,8 +497,7 @@ class WposPosSale {
             }
             // decrement stock level
             if ($item->sitemid>0){
-                /*$stockMdl->incrementStockLevel($item->sitemid, $this->jsonobj->locid, $item->qty, true);*/
-                $wposStock->incrementStockLevel($item->sitemid, $this->jsonobj->locid, $item->qty, true);
+                $wposStock->incrementStockLevel2($item->sitemid, $this->jsonobj->locid, $item->qty, true);
             }
             $this->jsonobj->items[$key]->id = $res;
         }

@@ -202,7 +202,8 @@ function WPOSTransactions() {
                     modStr+= '<br/>'+(mod.hasOwnProperty('qty')?(mod.qty>0?'+ ':'')+mod.qty:'')+' '+mod.name+(mod.hasOwnProperty('value')?': '+mod.value:'')+' ('+WPOS.util.currencyFormat(mod.price)+')';
                 }
             }
-            $(itemtable).append('<tr><td>' + items[i].qty + '</td><td>' + items[i].name + modStr + '</td><td>' + WPOS.util.currencyFormat(items[i].unit) + '</td><td>' + taxStr + '</td><td>' + WPOS.util.currencyFormat(items[i].price) + '</td>' +
+               //hjkim mexico
+            $(itemtable).append('<tr><td>' + items[i].name + modStr + '</td><td>' + WPOS.util.currencyFormat(items[i].unit)+ '</td><td>' + items[i].qty  + '</td><td>' +  WPOS.util.currencyFormat(items[i].price) + '</td>' +
                 '<td><div class="action-buttons itembuttons" style="text-align: right;"><a onclick="openInvoiceItemDialog(' + i + ');" class="green"><i class="icon-pencil bigger-130"></i></a><a onclick="WPOS.transactions.deleteInvoiceItem(' + items[i].id + ')" class="red"><i class="icon-trash bigger-130"></i></a></div></td></tr>');
         }
     }
@@ -350,12 +351,14 @@ function WPOSTransactions() {
             $('#transitemtaxid').val(item.taxid);
             $('#transitemprice').text(WPOS.util.currencyFormat(item.price));
             itemdialog.dialog('option', 'title', 'Edit Item');
+            refreshUnitSelects(item.unit,0,0,0);
         } else {
             $('#transitemform')[0].reset();
             $('#transitemid').val(0);
             $('#transitemsitemid').val(0);
             $('#transitemprice').text(WPOS.util.currencyFormat(0.00));
             itemdialog.dialog('option', 'title', 'Add Item');
+            refreshUnitSelects(0,0,0,0);
         }
         calculateItemTotals();
         setDisabledItemFields();
@@ -366,14 +369,19 @@ function WPOSTransactions() {
         if ($('#transitemsitemid').val() != 0) {
             $('#transitemname').prop("disabled", true);
             $('#transitemtaxid').prop("disabled", true);
+            $('#stitemsearch').prop("disabled", true);
+//hjkim mexico
+/*
             var unitfield = $('#transitemunit');
             if (unitfield.val() !== "") {
                 unitfield.prop("disabled", true);
             }
+*/
         } else {
             $('#transitemname').prop("disabled", false);
             $('#transitemtaxid').prop("disabled", false);
             $('#transitemunit').prop("disabled", false);
+            $('#stitemsearch').prop("disabled", false);
         }
     }
 
@@ -945,11 +953,11 @@ function WPOSTransactions() {
 
             // Edit invoice datepickers
             var invpaydt = $("#transpaydt");
-            invpaydt.datepicker({dateFormat: "dd/mm/yy"});
+            invpaydt.datepicker({dateFormat: "mm/dd/yy"});
             invpaydt.datepicker('setDate', new Date().getTime());
-            $("#invprocessdt").datepicker({dateFormat: "dd/mm/yy"});
-            $("#invduedt").datepicker({dateFormat: "dd/mm/yy"});
-            $("#invclosedt").datepicker({dateFormat: "dd/mm/yy"});
+            $("#invprocessdt").datepicker({dateFormat: "mm/dd/yy"});
+            $("#invduedt").datepicker({dateFormat: "mm/dd/yy"});
+            $("#invclosedt").datepicker({dateFormat: "mm/dd/yy"});
 
 
             // customer email search
@@ -1005,12 +1013,14 @@ function WPOSTransactions() {
                     $('#transitemname').val(ui.item.name);
                     $('#transitemaltname').val(ui.item.alt_name);
                     $('#transitemdesc').val(ui.item.description);
-                    $('#transitemqty').val(ui.item.qty);
-                    $('#transitemunit').val(ui.item.price);
-                    $('#transitemtaxid').val(ui.item.taxid);
+                    //$('#transitemqty').val(ui.item.qty);
+                    $('#transitemqty').val(1);//hjkim mexico
+                    //$('#transitemunit').val(ui.item.price);
+                    //$('#transitemtaxid').val(ui.item.taxid);
                     // lock fields
                     setDisabledItemFields();
                     calculateItemTotals();
+                    refreshUnitSelects(ui.item.price,ui.item.price2,ui.item.price3,ui.item.price4);                      //hjkim invoice
                     this.value = "";
                     return false;
                 }
@@ -1031,6 +1041,30 @@ function WPOSTransactions() {
             console.log();
             taxsel.append('<option class="taxid-' + WPOS.getTaxTable().rules[key].id + '" value="' + WPOS.getTaxTable().rules[key].id + '">' + WPOS.getTaxTable().rules[key].name + '</option>');
         }
+    }
+   
+    //hjkim invoice
+    this.refreshUnitSelects = function(){
+        refreshUnitSelects();
+    };
+    
+    //WPOS.getItemsTable()
+    
+    function refreshUnitSelects(price,price2,price3,price4){
+        var unitsel = $(".unitselect");
+        unitsel.html('');
+                    console.log("test");        
+
+                    console.log(price);                    
+                    console.log(price2);                                        
+//        getItemsTable
+//        var item = WPOS.getItemsTable()[WPOS.getStockIndex()[itemid]];
+            //addItem(item); 
+//          unisel.append('<option class="taxid-' + WPOS.getTaxTable().rules[key].id + '" value="' + item.price + '">' + WPOS.getTaxTable().rules[key].name + '</option>');            
+            unitsel.append('<option value="' + price + '" > ' + price + '  </option>   <option value="' + price2 + '" > ' + price2 + '  </option>  <option value="' + price3 + '" > ' + price3 + '  </option>  <option value="' + price4 + '" > ' + price4 + '  </option>  ');            
+//            '<td><select onChange="WPOS.sales.updateSalesTotal();" class="itemunit numpad" >  <option value="' + unit + '" > ' + unit + '  </option>   <option value="' + unit2 + '" > ' + unit2 + '  </option>   </select></td>' +            
+         //   taxsel.append('<option class="taxid-' + WPOS.getTaxTable().rules[key].id + '" value="' + WPOS.getTaxTable().rules[key].id + '">' + WPOS.getTaxTable().rules[key].name + '</option>');
+
     }
 
     return this;

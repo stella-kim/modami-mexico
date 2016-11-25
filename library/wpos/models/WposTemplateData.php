@@ -153,7 +153,7 @@ class WposTemplateData
 
         // invoice only fields
         if ($invoice){
-            $this->logo_url  = ($_SERVER['HTTPS']!==""?"https://":"http://").$_SERVER['SERVER_NAME'].$config['general']->bizlogo;
+            $this->logo_url  = ($_SERVER['HTTP_X_FORWARDED_PROTO']!==""?"https://":"http://").$_SERVER['SERVER_NAME'].$config['general']->bizlogo;
             $this->business_name  = $config['general']->bizname;
             $this->business_address  = $config['general']->bizaddress;
             $this->business_suburb  = $config['general']->bizsuburb;
@@ -179,9 +179,9 @@ class WposTemplateData
             $this->header_line1  = $config['general']->bizname;
             $this->header_line2  = $config['pos']->recline2;
             $this->header_line3  = $config['pos']->recline3;
-            $this->logo_url  = ($_SERVER['HTTPS']!==""?"https://":"http://").$_SERVER['SERVER_NAME'].$config['pos']->recemaillogo;
+            $this->logo_url  = ($_SERVER['HTTP_X_FORWARDED_PROTO']!==""?"https://":"http://").$_SERVER['SERVER_NAME'].$config['pos']->recemaillogo;
             $this->footer  = $config['pos']->recfooter;
-            $this->qrcode_url = $config['pos']->recqrcode!=""?($_SERVER['HTTPS']!==""?"https://":"http://").$_SERVER['SERVER_NAME']."/docs/qrcode.png":null;
+            $this->qrcode_url = $config['pos']->recqrcode!=""?($_SERVER['HTTP_X_FORWARDED_PROTO']!==""?"https://":"http://").$_SERVER['SERVER_NAME']."/docs/qrcode.png":null;
 
             // format refunds
             if (isset($data->refunddata)) {

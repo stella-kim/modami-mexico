@@ -120,7 +120,7 @@ function checkDependencies(){
 
     // apache node.js config
     if ($result['php_curl']){
-        $handle = curl_init((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!="off"?"https":"http").$_SERVER['SERVER_NAME']."/");
+        $handle = curl_init((isset($_SERVER['HTTP_X_FORWARDED_PROTO'])&&$_SERVER['HTTP_X_FORWARDED_PROTO']!="off"?"https":"http").$_SERVER['SERVER_NAME']."/");
         curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
         curl_exec($handle);
         $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);

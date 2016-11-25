@@ -88,6 +88,7 @@ function WPOSAdmin(){
                     var query = params;
                     //Send the ajax request
                     WPOS.loadPageContent(query);
+                    WPOS.print.loadPrintSettings();
                 }
             } else {
                 WPOS.goToHome();
@@ -559,9 +560,9 @@ function WPOSAdmin(){
             }
         }
         function formatData(input) {
-            // replace " with â€œ
+            // replace " with a€œ
             var regexp = new RegExp(/["]/g);
-            var output = input.replace(regexp, "â€œ");
+            var output = input.replace(regexp, "a€œ");
             //HTML
             var regexp = new RegExp(/\<[^\<]+\>/g);
             var output = output.replace(regexp, "");
@@ -574,4 +575,5 @@ function WPOSAdmin(){
     this.util = new WPOSUtil();
     this.transactions = WPOSTransactions();
     this.customers = WPOSCustomers();
+    this.print = new WPOSPrint();
 }
