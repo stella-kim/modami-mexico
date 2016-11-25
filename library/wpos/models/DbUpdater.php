@@ -41,9 +41,9 @@ class DbUpdater {
         }
         // Check docs template
         $this->checkStorageTemplate();
-        if ($installed){
-            return "Database detected, skipping full installation.";
-        }
+//        if ($installed){
+//            return "Database detected, skipping full installation.";
+//        }
         // Install database
         $schemapath = $_SERVER['DOCUMENT_ROOT'].$_SERVER['APP_ROOT']."library/installer/schemas/install.sql";
         if (!file_exists($schemapath)){
