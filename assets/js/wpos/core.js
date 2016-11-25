@@ -827,8 +827,6 @@ function WPOS() {
 
     this.loadConfigTable2 =function() {
         var data = localStorage.getItem("wpos_config");
-        console.log("core");
-        console.log(JSON.stringify(data));
         if (data != null) {
             configtable = JSON.parse(data);
             return true;
