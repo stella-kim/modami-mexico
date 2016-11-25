@@ -1218,6 +1218,23 @@ function WPOSSales() {
         }
     };
 
+    function checkOnlineStatus() {
+        try {
+            var res = $.ajax({
+                timeout : 3000,
+                url     : "/api/hello",
+                type    : "GET",
+                cache   : false,
+                dataType: "text",
+                async   : false
+            }).status;
+            online = res == "200";
+        } catch (ex){
+            online = false;
+        }
+        return online;
+    }
+
     function getSaleObject(){
         // get sales items
         var itemtable = $("#itemtable");
@@ -1330,8 +1347,19 @@ function WPOSSales() {
 
         // create object
         var salesobj = {};
+        WPOS.loadConfigTable2();
         var config = WPOS.getConfigTable();
-        salesobj.ref = date + "-" + config.deviceid + "-" + Math.floor((Math.random() * 10000) + 1);
+        //salesobj.ref = date + "-" + config.deviceid + "-" + Math.floor((Math.random() * 10000) + 1);
+        salesobj.ref = parseInt(WPOS.getConfigTable().general.refnumber)+1;        
+        WPOS.setConfigTable('refnumber', salesobj.ref);
+        
+        if (checkOnlineStatus()==true) {       
+          var data = {};
+          data['refnumber'] = salesobj.ref;
+          WPOS.sendJsonData("settings/general/set", JSON.stringify(data));
+           
+        }
+
         salesobj.userid = WPOS.getCurrentUserId();
         salesobj.devid = config.deviceid;
         salesobj.locid = config.locationid;

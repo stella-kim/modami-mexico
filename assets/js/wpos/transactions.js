@@ -65,7 +65,8 @@ function WPOSTransactions() {
             "aaSorting": [[ 5, "desc" ]],
             "aoColumns": [
                 { "sType": "string", "mData":function(data, type, val){ return getOfflineStatusHtml(data.ref) + "<br/>" + data.id;} },
-                { "sType": "numeric", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref.split("-")[2]+'</a>'; } },
+//                { "sType": "numeric", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref.split("-")[2]+'</a>'; } },
+                { "sType": "numeric", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref+'</a>'; } },                    
                 { "sType": "string", "mData":function(data, type, val){ return getDeviceLocationText(data.devid, data.locid); } },
                 { "sType": "numeric", "mData":"numitems" },
                 { "sType": "currency", "mData":function(data,type,val){return WPOS.util.currencyFormat(data["total"]);} },

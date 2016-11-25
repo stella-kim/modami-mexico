@@ -71,7 +71,15 @@
     // DATA FUNCTIONS
     function addInvoice(){
         WPOS.util.showLoader();
-        var ref = (new Date()).getTime()+"-0-"+Math.floor((Math.random() * 10000) + 1);
+        //var ref = (new Date()).getTime()+"-0-"+Math.floor((Math.random() * 10000) + 1);
+        WPOS.loadConfigTable();
+        var ref = parseInt(WPOS.getConfigTable().general.refnumber)+1;
+        WPOS.setConfigTable('refnumber', ref);
+
+        var data = {};
+        data['refnumber'] = ref;
+        WPOS.sendJsonData("settings/general/set", JSON.stringify(data));
+
         var result = WPOS.sendJsonData("invoices/add", JSON.stringify({ref:ref, channel:"manual", discount:0, custid:$("#ninvcustid").val(), processdt:$("#ninvprocessdt").datepicker("getDate").getTime(), duedt:$("#ninvduedt").datepicker("getDate").getTime(), notes:$('#ninvnotes').val()}));
         if (result!==false){
             // add result to invoice data, reload table
@@ -218,7 +226,8 @@
                 "aaSorting": [[8, "desc"],[ 0, "desc" ]],
                 "aoColumns": [
                     { "sType": "numeric", "mData":"id" },
-                    { "sType": "string", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref.split("-")[2]+'</a>'; } },
+//                    { "sType": "string", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref.split("-")[2]+'</a>'; } },
+                    { "sType": "numeric", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref+'</a>'; } },
                     { "sType": "string", "mData":function(data, type, val){ return (customers.hasOwnProperty(data.custid)?customers[data.custid].name:"N/A");} },
                     { "sType": "string", "mData":function(data, type, val){ return WPOS.getConfigTable().users[data.userid].username;} },
                     { "sType": "timestamp", "mData":function(data, type, val){return timestamphtml+data.processdt+'</small>'+WPOS.util.getShortDate(data.processdt);} },

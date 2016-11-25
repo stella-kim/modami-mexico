@@ -170,7 +170,8 @@
                 "aaSorting": [[ 1, "desc" ]],
                 "aoColumns": [
                     { "sType": "numeric", "mData":"id" },
-                    { "sType": "numeric", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref.split("-")[2]+'</a>'; } },
+//                    { "sType": "numeric", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref.split("-")[2]+'</a>'; } },
+                    { "sType": "numeric", "mData":function(data, type, val){ return '<a class="reflabel" title="'+data.ref+'" href="">'+data.ref+'</a>'; } },                    
                     { "sType": "string", "mData":function(data, type, val){ return WPOS.getConfigTable().users[data.userid].username;} },
                     { "sType": "string", "mData":"devlocname" },
                     { "sType": "numeric", "mData":"numitems" },

@@ -516,6 +516,28 @@ function WPOSAdmin(){
         }
     };
 
+
+     this.loadConfigTable =function() {
+        var data = localStorage.getItem("wpos_config");
+        
+        if (data != null) {
+            configtable = JSON.parse(data);
+            return true;
+        }
+        configtable = {};
+        return false;
+    }
+
+       
+    this.setConfigTable = function(key, value){
+        var jsonconfig;
+        if (localStorage.getItem("wpos_config") !== null) {
+            jsonconfig = $.parseJSON(localStorage.getItem("wpos_config"));
+            jsonconfig.general.refnumber = value;
+        } 
+        localStorage.setItem("wpos_config", JSON.stringify(jsonconfig));
+    }
+
     // CSV export functions
     this.initSave = function(filename, data){
         var dlelem = $('#dlelem');
