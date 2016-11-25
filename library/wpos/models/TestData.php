@@ -265,7 +265,7 @@ class TestData {
             $dbMdl->_db->exec("ALTER TABLE customers AUTO_INCREMENT = 1; TRUNCATE TABLE customers;");
             $dbMdl->_db->exec("ALTER TABLE customer_contacts AUTO_INCREMENT = 1; TRUNCATE TABLE customer_contacts;");
             $dbMdl->_db->exec("ALTER TABLE auth AUTO_INCREMENT = 1; TRUNCATE TABLE auth;");
-            $dbMdl->_db->exec("ALTER TABLE config AUTO_INCREMENT = 1; TRUNCATE TABLE config;");
+//            $dbMdl->_db->exec("ALTER TABLE config AUTO_INCREMENT = 1; TRUNCATE TABLE config;");
 //            $dbMdl->_db->exec("ALTER TABLE tax_rules AUTO_INCREMENT = 1; TRUNCATE TABLE tax_rules;");
 //            $dbMdl->_db->exec("ALTER TABLE tax_items AUTO_INCREMENT = 1; TRUNCATE TABLE tax_items;");
             $dbMdl->_db->exec("ALTER TABLE stock_history AUTO_INCREMENT = 1; TRUNCATE TABLE stock_history;");            
