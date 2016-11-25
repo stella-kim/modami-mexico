@@ -56,7 +56,7 @@ function WPOSPrint(kitchenMode) {
             escpreceiptmode: 'text',
             alt_charset: 'pc864',
             alt_codepage: 22,
-            rec_language: 'primary',
+            rec_language: 'alternate',//            rec_language: 'primary',
             rec_orientation: 'ltr',
             currency_override: false,
             currency_codepage: 0,
@@ -101,6 +101,9 @@ function WPOSPrint(kitchenMode) {
         if (kitchenMode){
             if (!curset.printers.hasOwnProperty('orders'))
                 curset.printers['orders'] = defaultsettings.printer;
+            if (!curset.printers.hasOwnProperty('receipts')) //hjkim
+                curset.printers['receipts'] = defaultsettings.printer;
+                
         } else {
             if (!curset.printers.hasOwnProperty('receipts'))
                 curset.printers['receipts'] = defaultsettings.printer;
@@ -374,13 +377,13 @@ function WPOSPrint(kitchenMode) {
         var printer = getPrintSetting('reports', 'printer');
         switch (getPrintSetting('reports', 'method')) {
             case "br":
-                browserPrintHtml($("#reportcontain").html(), 'WallacePOS Report', 600, 800);
+                browserPrintHtml($("#reportcontain").html(), 'MODA MI Report', 600, 800);
                 break;
             case "qz":
                 alert("QZ-Print integration is no longer available, switch to the new webprint applet");
                 break;
             case "wp":
-                html = '<html><head><title>Wpos Report</title><link media="all" href="/admin/assets/css/bootstrap.min.css" rel="stylesheet"/><link media="all" rel="stylesheet" href="/admin/assets/css/font-awesome.min.css"/><link media="all" rel="stylesheet" href="/admin/assets/css/ace-fonts.css"/><link media="all" rel="stylesheet" href="admin/assets/css/ace.min.css"/></head><body style="background-color: #FFFFFF;">' + $("#reportcontain").html() + '</body></html>';
+                html = '<html><head><title>pos Report</title><link media="all" href="/admin/assets/css/bootstrap.min.css" rel="stylesheet"/><link media="all" rel="stylesheet" href="/admin/assets/css/font-awesome.min.css"/><link media="all" rel="stylesheet" href="/admin/assets/css/ace-fonts.css"/><link media="all" rel="stylesheet" href="admin/assets/css/ace.min.css"/></head><body style="background-color: #FFFFFF;">' + $("#reportcontain").html() + '</body></html>';
                 webprint.printHtml(html, printer);
         }
     }
@@ -427,7 +430,7 @@ function WPOSPrint(kitchenMode) {
         var method = getPrintSetting(printer, 'method');
         switch (method) {
             case "br":
-                browserPrintHtml("<pre style='text-align: center; background-color: white;'>" + text + "</pre>", 'WallacePOS Receipt', 310, 600);
+                browserPrintHtml("<pre style='text-align: center; background-color: white;'>" + text + "</pre>", 'MODA MI Receipt', 310, 600);
                 return true;
             case "qz":
                 alert("QZ-Print integration is no longer available, switch to the new webprint applet");
@@ -451,9 +454,9 @@ function WPOSPrint(kitchenMode) {
         switch (method) {
             case "br":
                 if (curset.printinv) {
-                    browserPrintHtml(getHtmlReceipt(record, false, true), 'WallacePOS Invoice', 600, 800);
+                    browserPrintHtml(getHtmlReceipt(record, false, true), 'MODA MI Invoice', 600, 800);
                 } else {
-                    browserPrintHtml(getHtmlReceipt(record, false), 'WallacePOS Receipt', 310, 600);
+                    browserPrintHtml(getHtmlReceipt(record, false), 'MODA MI Receipt', 310, 600);
                 }
                 return true;
             case "qz":
@@ -497,6 +500,11 @@ function WPOSPrint(kitchenMode) {
                 var data = getEscOrderTicket(record, orderid, flagtext);
                 sendESCPPrintData(printer, data + getFeedAndCutCommands(printer));
                 return true;
+            case "br":
+                var data = getEscOrderTicket(record, orderid, flagtext);            
+                browserPrintHtml("<pre style='text-align: center; background-color: white;'>" + data + "</pre>", 'Order Ticket', 310, 600);
+                break;
+                
             default :
                 return false;
         }
@@ -822,7 +830,8 @@ function WPOSPrint(kitchenMode) {
         for (var i in record.items) {
             item = record.items[i];
             var itemlabel;
-            var itemname = (lang == "alternate" ? convertUnicodeCharacters(item.alt_name, getGlobalPrintSetting('alt_charset'), getGlobalPrintSetting('alt_codepage')) : item.name);
+//            var itemname = (lang == "alternate" ? convertUnicodeCharacters(item.alt_name, getGlobalPrintSetting('alt_charset'), getGlobalPrintSetting('alt_codepage')) : item.name);
+            var itemname = item.name;
             if (ltr){
                 itemlabel = item.qty + " x " + itemname + " (" + WPOS.util.currencyFormat(item.unit, false, true) + ")";
             } else {
@@ -877,10 +886,11 @@ function WPOSPrint(kitchenMode) {
                 }
             }
             cmd += getEscTableRow(formatLabel(translateLabel(WPOS.util.capFirstLetter(method)), true, 1), WPOS.util.currencyFormat(amount, false, true), false, false, true);
-            if (method == 'cash') { // If cash print tender & change
+/*            if (method == 'cash') { // If cash print tender & change
                 cmd += getEscTableRow(formatLabel(translateLabel('Tendered'), true, 1), WPOS.util.currencyFormat(item.tender, false, true), false, false, true);
                 cmd += getEscTableRow(formatLabel(translateLabel('Change'), true, 1), WPOS.util.currencyFormat(item.change, false, true), false, false, true);
             }
+*/            
         }
         cmd += '\n';
         // refunds
@@ -1387,11 +1397,12 @@ function WPOSPrint(kitchenMode) {
             }
             var altlabel = altlabels.hasOwnProperty(method)?altlabels[method]:WPOS.util.capFirstLetter(method);
             temp_data.sale_payments.push({label: WPOS.util.capFirstLetter(method), altlabel: altlabel, amount: amount});
-            if (method == 'cash') {
+/*            if (method == 'cash') {
                 // If cash print tender & change.
                 temp_data.sale_payments.push({label: "Tendered", altlabel: altlabels.tendered, amount: item.tender});
                 temp_data.sale_payments.push({label: "Change", altlabel: altlabels.change, amount: item.change});
             }
+*/            
         }
         // customer
         if (record.custid>0) {
