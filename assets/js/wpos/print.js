@@ -56,7 +56,7 @@ function WPOSPrint(kitchenMode) {
             escpreceiptmode: 'text',
             alt_charset: 'pc864',
             alt_codepage: 22,
-            rec_language: 'primary',
+            rec_language: 'alternate',//            rec_language: 'primary',
             rec_orientation: 'ltr',
             currency_override: false,
             currency_codepage: 0,
@@ -101,6 +101,9 @@ function WPOSPrint(kitchenMode) {
         if (kitchenMode){
             if (!curset.printers.hasOwnProperty('orders'))
                 curset.printers['orders'] = defaultsettings.printer;
+            if (!curset.printers.hasOwnProperty('receipts')) //hjkim
+                curset.printers['receipts'] = defaultsettings.printer;
+                
         } else {
             if (!curset.printers.hasOwnProperty('receipts'))
                 curset.printers['receipts'] = defaultsettings.printer;
@@ -374,13 +377,13 @@ function WPOSPrint(kitchenMode) {
         var printer = getPrintSetting('reports', 'printer');
         switch (getPrintSetting('reports', 'method')) {
             case "br":
-                browserPrintHtml($("#reportcontain").html(), 'WallacePOS Report', 600, 800);
+                browserPrintHtml($("#reportcontain").html(), 'MODA MI Report', 600, 800);
                 break;
             case "qz":
                 alert("QZ-Print integration is no longer available, switch to the new webprint applet");
                 break;
             case "wp":
-                html = '<html><head><title>Wpos Report</title><link media="all" href="/admin/assets/css/bootstrap.min.css" rel="stylesheet"/><link media="all" rel="stylesheet" href="/admin/assets/css/font-awesome.min.css"/><link media="all" rel="stylesheet" href="/admin/assets/css/ace-fonts.css"/><link media="all" rel="stylesheet" href="admin/assets/css/ace.min.css"/></head><body style="background-color: #FFFFFF;">' + $("#reportcontain").html() + '</body></html>';
+                html = '<html><head><title>pos Report</title><link media="all" href="/admin/assets/css/bootstrap.min.css" rel="stylesheet"/><link media="all" rel="stylesheet" href="/admin/assets/css/font-awesome.min.css"/><link media="all" rel="stylesheet" href="/admin/assets/css/ace-fonts.css"/><link media="all" rel="stylesheet" href="admin/assets/css/ace.min.css"/></head><body style="background-color: #FFFFFF;">' + $("#reportcontain").html() + '</body></html>';
                 webprint.printHtml(html, printer);
         }
     }
@@ -427,7 +430,7 @@ function WPOSPrint(kitchenMode) {
         var method = getPrintSetting(printer, 'method');
         switch (method) {
             case "br":
-                browserPrintHtml("<pre style='text-align: center; background-color: white;'>" + text + "</pre>", 'WallacePOS Receipt', 310, 600);
+                browserPrintHtml("<pre style='text-align: center; background-color: white;'>" + text + "</pre>", 'MODA MI Receipt', 310, 600);
                 return true;
             case "qz":
                 alert("QZ-Print integration is no longer available, switch to the new webprint applet");
@@ -451,9 +454,9 @@ function WPOSPrint(kitchenMode) {
         switch (method) {
             case "br":
                 if (curset.printinv) {
-                    browserPrintHtml(getHtmlReceipt(record, false, true), 'WallacePOS Invoice', 600, 800);
+                    browserPrintHtml(getHtmlReceipt(record, false, true), 'MODA MI Invoice', 600, 800);
                 } else {
-                    browserPrintHtml(getHtmlReceipt(record, false), 'WallacePOS Receipt', 310, 600);
+                    browserPrintHtml(getHtmlReceipt(record, false), 'MODA MI Receipt', 310, 600);
                 }
                 return true;
             case "qz":
@@ -497,6 +500,11 @@ function WPOSPrint(kitchenMode) {
                 var data = getEscOrderTicket(record, orderid, flagtext);
                 sendESCPPrintData(printer, data + getFeedAndCutCommands(printer));
                 return true;
+            case "br":
+                var data = getEscOrderTicket(record, orderid, flagtext);            
+                browserPrintHtml("<pre style='text-align: center; background-color: white;'>" + data + "</pre>", 'Order Ticket', 310, 600);
+                break;
+                
             default :
                 return false;
         }
@@ -822,7 +830,8 @@ function WPOSPrint(kitchenMode) {
         for (var i in record.items) {
             item = record.items[i];
             var itemlabel;
-            var itemname = (lang == "alternate" ? convertUnicodeCharacters(item.alt_name, getGlobalPrintSetting('alt_charset'), getGlobalPrintSetting('alt_codepage')) : item.name);
+//            var itemname = (lang == "alternate" ? convertUnicodeCharacters(item.alt_name, getGlobalPrintSetting('alt_charset'), getGlobalPrintSetting('alt_codepage')) : item.name);
+            var itemname = item.name;
             if (ltr){
                 itemlabel = item.qty + " x " + itemname + " (" + WPOS.util.currencyFormat(item.unit, false, true) + ")";
             } else {
@@ -877,10 +886,11 @@ function WPOSPrint(kitchenMode) {
                 }
             }
             cmd += getEscTableRow(formatLabel(translateLabel(WPOS.util.capFirstLetter(method)), true, 1), WPOS.util.currencyFormat(amount, false, true), false, false, true);
-            if (method == 'cash') { // If cash print tender & change
+/*            if (method == 'cash') { // If cash print tender & change
                 cmd += getEscTableRow(formatLabel(translateLabel('Tendered'), true, 1), WPOS.util.currencyFormat(item.tender, false, true), false, false, true);
                 cmd += getEscTableRow(formatLabel(translateLabel('Change'), true, 1), WPOS.util.currencyFormat(item.change, false, true), false, false, true);
             }
+*/            
         }
         cmd += '\n';
         // refunds
@@ -951,7 +961,8 @@ function WPOSPrint(kitchenMode) {
         var pad = "";
         // adjust for bytes of escp commands that set the character set
         var llength = (leftstr.indexOf("\x1B\x74")!==-1) ? leftstr.length - (3*(leftstr.match(/\x1B\x74/g) || []).length) : leftstr.length;
-        var rlength = (rightstr.indexOf("\x1B\x74")!==-1) ? rightstr.length - (3*(rightstr.match(/\x1B\x74/g) || []).length) : rightstr.length;
+        //var rlength = (rightstr.indexOf("\x1B\x74")!==-1) ? rightstr.length - (3*(rightstr.match(/\x1B\x74/g) || []).length) : rightstr.length;
+        var rlength = 0 ; 
         if (llength + rlength > 48) {
             var clip = (llength + rlength) - 48; // get amount to clip
             leftstr = leftstr.substring(0, (llength - (clip + 3)));
@@ -1387,11 +1398,12 @@ function WPOSPrint(kitchenMode) {
             }
             var altlabel = altlabels.hasOwnProperty(method)?altlabels[method]:WPOS.util.capFirstLetter(method);
             temp_data.sale_payments.push({label: WPOS.util.capFirstLetter(method), altlabel: altlabel, amount: amount});
-            if (method == 'cash') {
+/*            if (method == 'cash') {
                 // If cash print tender & change.
                 temp_data.sale_payments.push({label: "Tendered", altlabel: altlabels.tendered, amount: item.tender});
                 temp_data.sale_payments.push({label: "Change", altlabel: altlabels.change, amount: item.change});
             }
+*/            
         }
         // customer
         if (record.custid>0) {
@@ -1528,9 +1540,9 @@ function WPOSPrint(kitchenMode) {
     };
 
     var charmap = {
-        "iso-8859-6" : {" ":" ","¤":"¤","،":"¬","­":"­","؛":"»","؟":"¿","ء":"Á","آ":"Â","أ":"Ã","ؤ":"Ä","إ":"Å","ئ":"Æ","ا":"Ç","ب":"È","ة":"É","ت":"Ê","ث":"Ë","ج":"Ì","ح":"Í","خ":"Î","د":"Ï","ذ":"Ð","ر":"Ñ","ز":"Ò","س":"Ó","ش":"Ô","ص":"Õ","ض":"Ö","ط":"×","ظ":"Ø","ع":"Ù","غ":"Ú","ـ":"à","ف":"á","ق":"â","ك":"ã","ل":"ä","م":"å","ن":"æ","ه":"ç","و":"è","ى":"é","ي":"ê","ً":"ë","ٌ":"ì","ٍ":"í","َ":"î","ُ":"ï","ِ":"ð","ّ":"ñ","ْ":"ò"},
-        "pc1256"     : {"0":"0","1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9","\u0000":"\u0000","\u0001":"\u0001","\u0002":"\u0002","\u0003":"\u0003","\u0004":"\u0004","\u0005":"\u0005","\u0006":"\u0006","\u0007":"\u0007","\b":"\b","\t":"\t","\n":"\n","\u000b":"\u000b","\f":"\f","\r":"\r","\u000e":"\u000e","\u000f":"\u000f","\u0010":"\u0010","\u0011":"\u0011","\u0012":"\u0012","\u0013":"\u0013","\u0014":"\u0014","\u0015":"\u0015","\u0016":"\u0016","\u0017":"\u0017","\u0018":"\u0018","\u0019":"\u0019","\u001a":"\u001a","\u001b":"\u001b","\u001c":"\u001c","\u001d":"\u001d","\u001e":"\u001e","\u001f":"\u001f"," ":" ","!":"!","\"":"\"","#":"#","$":"$","%":"%","&":"&","'":"'","(":"(",")":")","*":"*","+":"+",",":",","-":"-",".":".","/":"/",":":":",";":";","<":"<","=":"=",">":">","?":"?","@":"@","A":"A","B":"B","C":"C","D":"D","E":"E","F":"F","G":"G","H":"H","I":"I","J":"J","K":"K","L":"L","M":"M","N":"N","O":"O","P":"P","Q":"Q","R":"R","S":"S","T":"T","U":"U","V":"V","W":"W","X":"X","Y":"Y","Z":"Z","[":"[","\\":"\\","]":"]","^":"^","_":"_","`":"`","a":"a","b":"b","c":"c","d":"d","e":"e","f":"f","g":"g","h":"h","i":"i","j":"j","k":"k","l":"l","m":"m","n":"n","o":"o","p":"p","q":"q","r":"r","s":"s","t":"t","u":"u","v":"v","w":"w","x":"x","y":"y","z":"z","{":"{","|":"|","}":"}","~":"~","":"","€":"","پ":"","‚":"","ƒ":"","„":"","…":"","†":"","‡":"","ˆ":"","‰":"","ٹ":"","‹":"","Œ":"","چ":"","ژ":"","ڈ":"","گ":"","‘":"","’":"","“":"","”":"","•":"","–":"","—":"","ک":"","™":"","ڑ":"","›":"","œ":"","‌":"","‍":"","ں":""," ":" ","،":"¡","¢":"¢","£":"£","¤":"¤","¥":"¥","¦":"¦","§":"§","¨":"¨","©":"©","ھ":"ª","«":"«","¬":"¬","­":"­","®":"®","¯":"¯","°":"°","±":"±","²":"²","³":"³","´":"´","µ":"µ","¶":"¶","·":"·","¸":"¸","¹":"¹","؛":"º","»":"»","¼":"¼","½":"½","¾":"¾","؟":"¿","ہ":"À","ء":"Á","آ":"Â","أ":"Ã","ؤ":"Ä","إ":"Å","ئ":"Æ","ا":"Ç","ب":"È","ة":"É","ت":"Ê","ث":"Ë","ج":"Ì","ح":"Í","خ":"Î","د":"Ï","ذ":"Ð","ر":"Ñ","ز":"Ò","س":"Ó","ش":"Ô","ص":"Õ","ض":"Ö","×":"×","ط":"Ø","ظ":"Ù","ع":"Ú","غ":"Û","ـ":"Ü","ف":"Ý","ق":"Þ","ك":"ß","à":"à","ل":"á","â":"â","م":"ã","ن":"ä","ه":"å","و":"æ","ç":"ç","è":"è","é":"é","ê":"ê","ë":"ë","ى":"ì","ي":"í","î":"î","ï":"ï","ً":"ð","ٌ":"ñ","ٍ":"ò","َ":"ó","ô":"ô","ُ":"õ","ِ":"ö","÷":"÷","ّ":"ø","ù":"ù","ْ":"ú","û":"û","ü":"ü","‎":"ý","‏":"þ","ے":"ÿ"},
-        "pc864"      : {"0":"0","1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9","\u0000":"\u0000","\u0001":"\u0001","\u0002":"\u0002","\u0003":"\u0003","\u0004":"\u0004","\u0005":"\u0005","\u0006":"\u0006","\u0007":"\u0007","\b":"\b","\t":"\t","\n":"\n","\u000b":"\u000b","\f":"\f","\r":"\r","\u000e":"\u000e","\u000f":"\u000f","\u0010":"\u0010","\u0011":"\u0011","\u0012":"\u0012","\u0013":"\u0013","\u0014":"\u0014","\u0015":"\u0015","\u0016":"\u0016","\u0017":"\u0017","\u0018":"\u0018","\u0019":"\u0019","\u001a":"\u001a","\u001b":"\u001b","\u001c":"\u001c","\u001d":"\u001d","\u001e":"\u001e","\u001f":"\u001f"," ":" ","!":"!","\"":"\"","#":"#","$":"$","٪":"%","&":"&","'":"'","(":"(",")":")","*":"*","+":"+",",":",","-":"-",".":".","/":"/",":":":",";":";","<":"<","=":"=",">":">","?":"?","@":"@","A":"A","B":"B","C":"C","D":"D","E":"E","F":"F","G":"G","H":"H","I":"I","J":"J","K":"K","L":"L","M":"M","N":"N","O":"O","P":"P","Q":"Q","R":"R","S":"S","T":"T","U":"U","V":"V","W":"W","X":"X","Y":"Y","Z":"Z","[":"[","\\":"\\","]":"]","^":"^","_":"_","`":"`","a":"a","b":"b","c":"c","d":"d","e":"e","f":"f","g":"g","h":"h","i":"i","j":"j","k":"k","l":"l","m":"m","n":"n","o":"o","p":"p","q":"q","r":"r","s":"s","t":"t","u":"u","v":"v","w":"w","x":"x","y":"y","z":"z","{":"{","|":"|","}":"}","~":"~","":"","°":"","·":"","∙":"","√":"","▒":"","─":"","│":"","┼":"","┤":"","┬":"","├":"","┴":"","┐":"","┌":"","└":"","┘":"","β":"","∞":"","φ":"","±":"","½":"","¼":"","≈":"","«":"","»":"","ﻷ":"","ﻸ":"","ﻻ":"","ﻼ":""," ":" ","­":"¡","ﺂ":"¢","£":"£","¤":"¤","ﺄ":"¥","ﺎ":"¨","ﺏ":"©","ﺕ":"ª","ﺙ":"«","،":"¬","ﺝ":"­","ﺡ":"®","ﺥ":"¯","٠":"°","١":"±","٢":"²","٣":"³","٤":"´","٥":"µ","٦":"¶","٧":"·","٨":"¸","٩":"¹","ﻑ":"º","؛":"»","ﺱ":"¼","ﺵ":"½","ﺹ":"¾","؟":"¿","¢":"À","ﺀ":"Á","ﺁ":"Â","ﺃ":"Ã","ﺅ":"Ä","ﻊ":"Å","ﺋ":"Æ","ﺍ":"Ç","ﺑ":"È","ﺓ":"É","ﺗ":"Ê","ﺛ":"Ë","ﺟ":"Ì","ﺣ":"Í","ﺧ":"Î","ﺩ":"Ï","ﺫ":"Ð","ﺭ":"Ñ","ﺯ":"Ò","ﺳ":"Ó","ﺷ":"Ô","ﺻ":"Õ","ﺿ":"Ö","ﻁ":"×","ﻅ":"Ø","ﻋ":"Ù","ﻏ":"Ú","¦":"Û","¬":"Ü","÷":"Ý","×":"Þ","ﻉ":"ß","ـ":"à","ﻓ":"á","ﻗ":"â","ﻛ":"ã","ﻟ":"ä","ﻣ":"å","ﻧ":"æ","ﻫ":"ç","ﻭ":"è","ﻯ":"é","ﻳ":"ê","ﺽ":"ë","ﻌ":"ì","ﻎ":"í","ﻍ":"î","ﻡ":"ï","ﹽ":"ð","ّ":"ñ","ﻥ":"ò","ﻩ":"ó","ﻬ":"ô","ﻰ":"õ","ﻲ":"ö","ﻐ":"÷","ﻕ":"ø","ﻵ":"ù","ﻶ":"ú","ﻝ":"û","ﻙ":"ü","ﻱ":"ý","■":"þ"}
+        "iso-8859-6" : {" ":" ","¤":"¤","?":"￢","­":"­","?":"≫","?":"¿","?":"A","?":"A","?":"A","?":"A","?":"A","?":"Æ","?":"C","?":"E","?":"E","?":"E","?":"E","?":"I","?":"I","?":"I","?":"I","?":"Ð","?":"N","?":"O","?":"O","?":"O","?":"O","?":"O","?":"×","?":"Ø","?":"U","?":"U","?":"a","?":"a","?":"a","?":"a","?":"a","?":"a","?":"æ","?":"c","?":"e","?":"e","?":"e","?":"e","?":"i","?":"i","?":"i","?":"i","?":"ð","?":"n","?":"o"},
+        "pc1256"     : {"0":"0","1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9","\u0000":"\u0000","\u0001":"\u0001","\u0002":"\u0002","\u0003":"\u0003","\u0004":"\u0004","\u0005":"\u0005","\u0006":"\u0006","\u0007":"\u0007","\b":"\b","\t":"\t","\n":"\n","\u000b":"\u000b","\f":"\f","\r":"\r","\u000e":"\u000e","\u000f":"\u000f","\u0010":"\u0010","\u0011":"\u0011","\u0012":"\u0012","\u0013":"\u0013","\u0014":"\u0014","\u0015":"\u0015","\u0016":"\u0016","\u0017":"\u0017","\u0018":"\u0018","\u0019":"\u0019","\u001a":"\u001a","\u001b":"\u001b","\u001c":"\u001c","\u001d":"\u001d","\u001e":"\u001e","\u001f":"\u001f"," ":" ","!":"!","\"":"\"","#":"#","$":"$","%":"%","&":"&","'":"'","(":"(",")":")","*":"*","+":"+",",":",","-":"-",".":".","/":"/",":":":",";":";","<":"<","=":"=",">":">","?":"?","@":"@","A":"A","B":"B","C":"C","D":"D","E":"E","F":"F","G":"G","H":"H","I":"I","J":"J","K":"K","L":"L","M":"M","N":"N","O":"O","P":"P","Q":"Q","R":"R","S":"S","T":"T","U":"U","V":"V","W":"W","X":"X","Y":"Y","Z":"Z","[":"[","\\":"\\","]":"]","^":"^","_":"_","`":"`","a":"a","b":"b","c":"c","d":"d","e":"e","f":"f","g":"g","h":"h","i":"i","j":"j","k":"k","l":"l","m":"m","n":"n","o":"o","p":"p","q":"q","r":"r","s":"s","t":"t","u":"u","v":"v","w":"w","x":"x","y":"y","z":"z","{":"{","|":"|","}":"}","~":"~","":"","€":"","?":"?","?":"?","?":"?","?":"?","…":"?","†":"?","‡":"?","?":"?","‰":"?","?":"?","?":"?","Œ":"?","?":"?","?":"?","?":"?","?":"?","‘":"?","’":"?","“":"?","”":"?","?":"?","?":"?","?":"?","?":"?","™":"?","?":"?","?":"?","œ":"?","?":"?","?":"?","?":"?"," ":" ","?":"¡","￠":"￠","￡":"￡","¤":"¤","￥":"￥","|":"|","§":"§","¨":"¨","ⓒ":"ⓒ","?":"ª","≪":"≪","￢":"￢","­":"­","®":"®","?":"?","°":"°","±":"±","²":"²","³":"³","´":"´","μ":"μ","¶":"¶","·":"·","¸":"¸","¹":"¹","?":"º","≫":"≫","¼":"¼","½":"½","¾":"¾","?":"¿","?":"A","?":"A","?":"A","?":"A","?":"A","?":"A","?":"Æ","?":"C","?":"E","?":"E","?":"E","?":"E","?":"I","?":"I","?":"I","?":"I","?":"Ð","?":"N","?":"O","?":"O","?":"O","?":"O","?":"O","×":"×","?":"Ø","?":"U","?":"U","?":"U","?":"U","?":"Y","?":"Þ","?":"ß","a":"a","?":"a","a":"a","?":"a","?":"a","?":"a","?":"æ","c":"c","e":"e","e":"e","e":"e","e":"e","?":"i","?":"i","i":"i","i":"i","?":"ð","?":"n","?":"o","?":"o","o":"o","?":"o","?":"o","÷":"÷","?":"ø","u":"u","?":"u","u":"u","u":"u","?":"y","?":"þ","?":"y"},
+        "pc864"      : {"0":"0","1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9","\u0000":"\u0000","\u0001":"\u0001","\u0002":"\u0002","\u0003":"\u0003","\u0004":"\u0004","\u0005":"\u0005","\u0006":"\u0006","\u0007":"\u0007","\b":"\b","\t":"\t","\n":"\n","\u000b":"\u000b","\f":"\f","\r":"\r","\u000e":"\u000e","\u000f":"\u000f","\u0010":"\u0010","\u0011":"\u0011","\u0012":"\u0012","\u0013":"\u0013","\u0014":"\u0014","\u0015":"\u0015","\u0016":"\u0016","\u0017":"\u0017","\u0018":"\u0018","\u0019":"\u0019","\u001a":"\u001a","\u001b":"\u001b","\u001c":"\u001c","\u001d":"\u001d","\u001e":"\u001e","\u001f":"\u001f"," ":" ","!":"!","\"":"\"","#":"#","$":"$","?":"%","&":"&","'":"'","(":"(",")":")","*":"*","+":"+",",":",","-":"-",".":".","/":"/",":":":",";":";","<":"<","=":"=",">":">","?":"?","@":"@","A":"A","B":"B","C":"C","D":"D","E":"E","F":"F","G":"G","H":"H","I":"I","J":"J","K":"K","L":"L","M":"M","N":"N","O":"O","P":"P","Q":"Q","R":"R","S":"S","T":"T","U":"U","V":"V","W":"W","X":"X","Y":"Y","Z":"Z","[":"[","\\":"\\","]":"]","^":"^","_":"_","`":"`","a":"a","b":"b","c":"c","d":"d","e":"e","f":"f","g":"g","h":"h","i":"i","j":"j","k":"k","l":"l","m":"m","n":"n","o":"o","p":"p","q":"q","r":"r","s":"s","t":"t","u":"u","v":"v","w":"w","x":"x","y":"y","z":"z","{":"{","|":"|","}":"}","~":"~","":"","°":"","·":"?","?":"?","√":"?","▒":"?","─":"?","│":"?","┼":"?","┤":"?","┬":"?","├":"?","┴":"?","┐":"?","┌":"?","└":"?","┘":"?","β":"?","∞":"?","φ":"?","±":"?","½":"?","¼":"?","?":"?","≪":"?","≫":"?","?":"?","?":"?","?":"?","?":"?"," ":" ","­":"¡","?":"￠","￡":"￡","¤":"¤","?":"￥","?":"¨","?":"ⓒ","?":"ª","?":"≪","?":"￢","?":"­","?":"®","?":"?","?":"°","?":"±","?":"²","?":"³","?":"´","?":"μ","?":"¶","?":"·","?":"¸","?":"¹","?":"º","?":"≫","?":"¼","?":"½","?":"¾","?":"¿","￠":"A","?":"A","?":"A","?":"A","?":"A","?":"A","?":"Æ","?":"C","?":"E","?":"E","?":"E","?":"E","?":"I","?":"I","?":"I","?":"I","?":"Ð","?":"N","?":"O","?":"O","?":"O","?":"O","?":"O","?":"×","?":"Ø","?":"U","?":"U","|":"U","￢":"U","÷":"Y","×":"Þ","?":"ß","?":"a","?":"a","?":"a","?":"a","?":"a","?":"a","?":"æ","?":"c","?":"e","?":"e","?":"e","?":"e","?":"i","?":"i","?":"i","?":"i","?":"ð","?":"n","?":"o","?":"o","?":"o","?":"o","?":"o","?":"÷","?":"ø","?":"u","?":"u","?":"u","?":"u","?":"y","■":"þ"}
     };
 
     // Arabic form conversion
