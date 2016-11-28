@@ -823,7 +823,7 @@ function WPOSPrint(kitchenMode) {
         var cmd = getEscReceiptHeader();
         // transdetails
         cmd += (ltr ? esc_a_l : esc_a_r);
-        cmd += getEscTableRow(formatLabel(translateLabel("Transaction Ref"), false, 1), record.ref, false, false, false);
+        cmd += getEscTableRow2(formatLabel(translateLabel("Transaction Ref"), true, 1), record.ref, false, false, false);
         cmd += getEscTableRow(formatLabel(translateLabel("Sale Time"), true, 7), WPOS.util.getDateFromTimestamp(record.processdt), false, false, false) + "\n";
         // items
         var item;
@@ -981,6 +981,33 @@ function WPOSPrint(kitchenMode) {
         }
         return row;
     }
+
+    function getEscTableRow2(leftstr, rightstr, bold, underline, stretch) {
+        var pad = "";
+        // adjust for bytes of escp commands that set the character set
+        var llength = (leftstr.indexOf("\x1B\x74")!==-1) ? leftstr.length - (3*(leftstr.match(/\x1B\x74/g) || []).length) : leftstr.length;
+        //var rlength = (rightstr.indexOf("\x1B\x74")!==-1) ? rightstr.length - (3*(rightstr.match(/\x1B\x74/g) || []).length) : rightstr.length;
+        var rlength = 0; 
+        if (llength + rlength > 48) {
+            var clip = (llength + rlength) - 48; // get amount to clip
+            leftstr = leftstr.substring(0, (llength - (clip + 3)));
+            pad = "...";
+        } else {
+            var num = 48 - (llength + rlength);
+            pad = new Array(num+1).join(" ");
+        }
+        var row;
+        if (ltr){
+            row = leftstr + (stretch?pad:'') + (underline ? esc_ul_on : '') + rightstr + (underline ? esc_ul_off : '') + (!stretch?pad:'') + "\n";
+        } else {
+            row = (!stretch?pad:'') + (underline ? esc_ul_on : '') + rightstr + (underline ? esc_ul_off : '') + (stretch?pad:'') + leftstr + "\n";
+        }
+        if (bold) { // format row
+            row = esc_bold_on + row + esc_bold_off;
+        }
+        return row;
+    }
+
 
     function translateLabel(label){
         if (lang!="alternate")
