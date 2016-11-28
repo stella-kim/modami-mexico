@@ -897,7 +897,7 @@ function WPOSPrint(kitchenMode) {
         
         if(record.channel=="manual") //invoice 
         {
-          cmd += getEscTableRow(formatLabel(translateLabel("Invoice"), true, 1), record.ref, false, false, false);
+          cmd += getEscTableRow(formatLabel(translateLabel("Invoice"), false, 1), record.ref, false, false, false);
           cmd += getEscTableRow(formatLabel(translateLabel("Invoice Date"), true, 7), WPOS.util.getDateFromTimestamp(record.processdt), false, false, false) ;
           cmd += getEscTableRow(formatLabel(translateLabel("Due Date"), true, 7), WPOS.util.getDateFromTimestamp(record.duedt), false, false, false) ;        
 
@@ -911,7 +911,7 @@ function WPOSPrint(kitchenMode) {
         }  
         else
         {
-          cmd += getEscTableRow(formatLabel(translateLabel("Transaction Ref"), true, 1), record.ref, false, false, false);
+          cmd += getEscTableRow(formatLabel(translateLabel("Transaction Ref"), false, 1), record.ref, false, false, false);
           cmd += getEscTableRow(formatLabel(translateLabel("Sale Time"), true, 7), WPOS.util.getDateFromTimestamp(record.processdt), false, false, false) + "\n";
         }  
         // items
@@ -1061,9 +1061,7 @@ function WPOSPrint(kitchenMode) {
         var pad = "";
         // adjust for bytes of escp commands that set the character set
         var llength = (leftstr.indexOf("\x1B\x74")!==-1) ? leftstr.length - (3*(leftstr.match(/\x1B\x74/g) || []).length) : leftstr.length ; 
-        //var rlength = (rightstr.indexOf("\x1B\x74")!==-1) ? rightstr.length - (3*(rightstr.match(/\x1B\x74/g) || []).length) : rightstr.length ; 
-        //var rlength = (rightstr.indexOf("\x1B\x74")!==-1) ? rightstr.length - (3*(rightstr.match(/\x1B\x74/g) || []).length) : rightstr.length;
-        var rlength = 0 ; 
+        var rlength = (rightstr.indexOf("\x1B\x74")!==-1) ? rightstr.length - (3*(rightstr.match(/\x1B\x74/g) || []).length) : rightstr.length ; 
 
         if (llength + rlength > 48) {
             var clip = (llength + rlength) - 48; // get amount to clip
